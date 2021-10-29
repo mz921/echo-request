@@ -1291,6 +1291,11 @@ iconv-lite@0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
+immer@^9.0.6:
+  version "9.0.6"
+  resolved "https://registry.npmjs.org/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
+  integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
+
 import-local@^3.0.2:
   version "3.0.2"
   resolved "https://registry.nlark.com/import-local/download/import-local-3.0.2.tgz#a8cfd0431d1de4a2199703d003e3e62364fa6db6"
@@ -2222,6 +2227,11 @@ saxes@^5.0.1:
   integrity sha1-7rq5U/o7dgjb6U5drbFciI+maW0=
   dependencies:
     xmlchars "^2.2.0"
+
+scoped-singleton-decorator@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/scoped-singleton-decorator/-/scoped-singleton-decorator-1.0.3.tgz#f03f68121bff5af81d622016382f815625916cfb"
+  integrity sha512-REnCWGKbAWCZLXHMlVnPWlVsiBv0B4EL7+wc5hu3B4lFAYRi53rXwfcU4MdeRSmdSJFb/G6H+9UfXCTWxTOqUA==
 
 semver@7.x, semver@^7.3.2:
   version "7.3.5"

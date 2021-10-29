@@ -1,30 +1,20 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add lodash.mergeWith
+  /Users/wylc/.volta/tools/image/node/14.18.0/bin/node /Users/wylc/.volta/tools/image/yarn/1.22.15/bin/yarn.js add immer
 
 PATH: 
-  /Users/wylc/.rvm/gems/ruby-2.6.5/bin:/Users/wylc/.rvm/gems/ruby-2.6.5@global/bin:/Users/wylc/.rvm/rubies/ruby-2.6.5/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/wylc/.rvm/bin
+  /Users/wylc/.volta/tools/image/yarn/1.22.15/bin:/Users/wylc/.volta/tools/image/node/14.18.0/bin:/Users/wylc/.rvm/gems/ruby-2.6.5/bin:/Users/wylc/.rvm/gems/ruby-2.6.5@global/bin:/Users/wylc/.rvm/rubies/ruby-2.6.5/bin:/Users/wylc/.volta/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/wylc/.rvm/bin
 
 Yarn version: 
-  1.22.4
+  1.22.15
 
 Node version: 
-  12.18.3
+  14.18.0
 
 Platform: 
   darwin x64
 
 Trace: 
-  Error: https://registry.npm.taobao.org/lodash.mergeWith: Not found
-      at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66987:18)
-      at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140748:22)
-      at Request.emit (events.js:315:20)
-      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141720:10)
-      at Request.emit (events.js:315:20)
-      at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141642:12)
-      at Object.onceWrapper (events.js:421:28)
-      at IncomingMessage.emit (events.js:327:22)
-      at endReadableNT (_stream_readable.js:1220:12)
-      at processTicksAndRejections (internal/process/task_queues.js:84:21)
+  Error: EACCES: permission denied, unlink '/Users/wylc/code/eaco-request/node_modules/@types/babel__generator/LICENSE'
 
 npm manifest: 
   {
@@ -39,9 +29,12 @@ npm manifest:
   		"test": "yarn jest"
   	},
   	"dependencies": {
+  		"@types/lodash.mergewith": "^4.6.6",
   		"joi": "^17.4.2",
   		"just-curry-it": "^3.2.1",
-  		"reflect-metadata": "^0.1.13"
+  		"lodash.mergewith": "^4.6.2",
+  		"reflect-metadata": "^0.1.13",
+  		"scoped-singleton-decorator": "^1.0.3"
   	},
   	"devDependencies": {
   		"@types/jest": "^27.0.1",
@@ -659,6 +652,18 @@ Lockfile:
     dependencies:
       jest-diff "^27.0.0"
       pretty-format "^27.0.0"
+  
+  "@types/lodash.mergewith@^4.6.6":
+    version "4.6.6"
+    resolved "https://registry.nlark.com/@types/lodash.mergewith/download/@types/lodash.mergewith-4.6.6.tgz#c4698f5b214a433ff35cb2c75ee6ec7f99d79f10"
+    integrity sha1-xGmPWyFKQz/zXLLHXubsf5nXnxA=
+    dependencies:
+      "@types/lodash" "*"
+  
+  "@types/lodash@*":
+    version "4.14.173"
+    resolved "https://registry.nlark.com/@types/lodash/download/@types/lodash-4.14.173.tgz#9d3b674c67a26cf673756f6aca7b429f237f91ed"
+    integrity sha1-nTtnTGeibPZzdW9qyntCnyN/ke0=
   
   "@types/node@*", "@types/node@^16.9.4":
     version "16.9.4"
@@ -1963,6 +1968,11 @@ Lockfile:
     dependencies:
       p-locate "^4.1.0"
   
+  lodash.mergewith@^4.6.2:
+    version "4.6.2"
+    resolved "https://registry.npm.taobao.org/lodash.mergewith/download/lodash.mergewith-4.6.2.tgz#617121f89ac55f59047c7aec1ccd6654c6590f55"
+    integrity sha1-YXEh+JrFX1kEfHrsHM1mVMZZD1U=
+  
   lodash@4.x, lodash@^4.7.0:
     version "4.17.21"
     resolved "https://registry.npm.taobao.org/lodash/download/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
@@ -2263,6 +2273,11 @@ Lockfile:
     integrity sha1-7rq5U/o7dgjb6U5drbFciI+maW0=
     dependencies:
       xmlchars "^2.2.0"
+  
+  scoped-singleton-decorator@^1.0.3:
+    version "1.0.3"
+    resolved "https://registry.npmjs.org/scoped-singleton-decorator/-/scoped-singleton-decorator-1.0.3.tgz#f03f68121bff5af81d622016382f815625916cfb"
+    integrity sha512-REnCWGKbAWCZLXHMlVnPWlVsiBv0B4EL7+wc5hu3B4lFAYRi53rXwfcU4MdeRSmdSJFb/G6H+9UfXCTWxTOqUA==
   
   semver@7.x, semver@^7.3.2:
     version "7.3.5"

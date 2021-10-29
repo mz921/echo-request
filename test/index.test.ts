@@ -37,6 +37,61 @@ class TestService {
 		},
 	})
 	static getUsersFrom2Names(@Params('name1') name1: string, @Params('name2') name2: string): any {}
+
+	// @Merge((users, user3) => users.concat(user3))
+	// @Get({
+	// 	request: {
+	// 		url: '/test/users',
+	// 		params: {
+	// 			name: Symbol.for('name3'),
+	// 		},
+	// 	},
+	// })
+	// @Merge((user1, user2) => user1.concat(user2))
+	// @Get({
+	// 	request: {
+	// 		url: '/test/users',
+	// 		params: {
+	// 			name: Symbol.for('name2'),
+	// 		},
+	// 	},
+	// })
+	// @Get({
+	// 	request: {
+	// 		url: '/test/users',
+	// 		params: {
+	// 			name: Symbol.for('name1'),
+	// 		},
+	// 	},
+	// })
+	// static getUsersFrom3Names(
+	// 	@Params('name1') name1: string,
+	// 	@Params('name2') name2: string,
+	// 	@Params('name3') name3: string
+	// ): any {}
+
+	// @Sequence
+	// @Get({
+	// 	request: {
+	// 		url: '/test/articles',
+	// 		params: {
+	// 			author: Symbol.for('userID')
+	// 		}
+	// 	}
+	// })
+	// @Get({
+	// 	request: {
+	// 		url: '/test/users',
+	// 		params: {
+	// 			name: Symbol.for('name')
+	// 		}
+	// 	},
+	// 	response: {
+	// 		transformers: (users) => users[0].id,
+	// 		name: "userID"
+	// 	}
+	// })
+	// static getArticlesFromUser(@Params('name') name: string): any {}
 }
 
 class HttpClient {
@@ -83,12 +138,12 @@ describe('GET Request', () => {
 	});
 
 	test('request params', () => {
-		return TestService.getUserFromName('Stella Kozey').then((res: any) => {
+		return TestService.getUserFromName('Bethany Johns').then((res: any) => {
 			expect(res).toEqual([
 				{
-					createdAt: '2021-09-19T16:31:18.103Z',
-					name: 'Stella Kozey',
-					avatar: 'https://cdn.fakercloud.com/avatars/orkuncaylar_128.jpg',
+					createdAt: '2021-10-28T04:10:26.100Z',
+					name: 'Bethany Johns',
+					avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
 					id: '1',
 				},
 			]);
@@ -96,21 +151,46 @@ describe('GET Request', () => {
 	});
 
 	test('merge', () => {
-		return TestService.getUsersFrom2Names('Stella Kozey', 'Tara Veum').then((res: any) => {
+		return TestService.getUsersFrom2Names('Bethany Johns', 'Renee Gleichner').then((res: any) => {
 			expect(res).toEqual([
 				{
-					createdAt: '2021-09-19T16:31:18.103Z',
-					name: 'Stella Kozey',
-					avatar: 'https://cdn.fakercloud.com/avatars/orkuncaylar_128.jpg',
+					createdAt: '2021-10-28T04:10:26.100Z',
+					name: 'Bethany Johns',
+					avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
 					id: '1',
 				},
 				{
-					createdAt: '2021-09-19T22:10:28.175Z',
-					name: 'Tara Veum',
-					avatar: 'https://cdn.fakercloud.com/avatars/id835559_128.jpg',
-					id: '3',
+					createdAt: '2021-10-28T08:28:49.712Z',
+					name: 'Renee Gleichner',
+					avatar: 'https://cdn.fakercloud.com/avatars/pcridesagain_128.jpg',
+					id: '2',
 				},
 			]);
 		});
 	});
+
+	// test('merge scope', () => {
+	// 	return TestService.getUsersFrom3Names('Bethany Johns', 'Renee Gleichner', 'Wilfred Adams').then((res: any) => {
+	// 		expect(res).toEqual([
+	// 			{
+	// 				createdAt: '2021-10-28T04:10:26.100Z',
+	// 				name: 'Bethany Johns',
+	// 				avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
+	// 				id: '1',
+	// 			},
+	// 			{
+	// 				createdAt: '2021-10-28T08:28:49.712Z',
+	// 				name: 'Renee Gleichner',
+	// 				avatar: 'https://cdn.fakercloud.com/avatars/pcridesagain_128.jpg',
+	// 				id: '2',
+	// 			},
+	// 			{
+	// 				createdAt: '2021-10-28T21:31:57.354Z',
+	// 				name: 'Wilfred Adams',
+	// 				avatar: 'https://cdn.fakercloud.com/avatars/robergd_128.jpg',
+	// 				id: '3',
+	// 			},
+	// 		]);
+	// 	});
+	// });
 });

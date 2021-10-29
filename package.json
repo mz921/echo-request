@@ -11,10 +11,12 @@
 	},
 	"dependencies": {
 		"@types/lodash.mergewith": "^4.6.6",
+		"immer": "^9.0.6",
 		"joi": "^17.4.2",
 		"just-curry-it": "^3.2.1",
 		"lodash.mergewith": "^4.6.2",
-		"reflect-metadata": "^0.1.13"
+		"reflect-metadata": "^0.1.13",
+		"scoped-singleton-decorator": "^1.0.3"
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.1",
