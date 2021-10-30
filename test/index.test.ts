@@ -1,13 +1,15 @@
-import { Get, useHttpClient, Params, Merge } from '../src/index';
+import { Get, useHttpClient, Params, Merge, Headers } from '../src/index';
 import https from 'https';
 
 class TestService {
 	@Get({
 		request: {
 			url: '/test/users',
+			headers: {},
+			key: "getUsers"
 		},
 	})
-	static getUsers(): any {}
+	static getUsers(@Headers('getUsers') headers?: Object): any {}
 
 	@Get({
 		request: {
@@ -92,7 +94,7 @@ class TestService {
 		},
 		response: {
 			transformers: (users) => users[0].id,
-			name: 'userID',
+			key: 'userID',
 		},
 	})
 	static getArticlesFromUser(@Params('name') name: string): any {}

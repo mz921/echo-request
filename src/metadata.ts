@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import ScopedSingleton from 'scoped-singleton-decorator';
 import produce from 'immer';
-import { HttpClientMetadata, InfoMetadata, MergeMetadata, MockMetadata, ParamMetadata, RequestMetadata } from './types';
-import { HttpClientSymbol, InfoSymbol, MergeSymbol, MockSymbol, ParamSymbol, RequestSymbol } from './symbols';
+import { HttpClientMetadata, InfoMetadata, MergeMetadata, MockMetadata, ParamMetadata, HeaderMetadata ,RequestMetadata } from './types';
+import { HeaderSymbol, HttpClientSymbol, InfoSymbol, MergeSymbol, MockSymbol, ParamSymbol, RequestSymbol } from './symbols';
 
 export interface IMetadataManager<T> {
 	get(): T;
@@ -55,6 +55,7 @@ export function metadataManagerFactory<T>(
 
 export const HttpClientMetadataManager = metadataManagerFactory<HttpClientMetadata | {}>(HttpClientSymbol);
 export const ParamMetadataManager = metadataManagerFactory<ParamMetadata>(ParamSymbol);
+export const HeaderMetadataManager = metadataManagerFactory<HeaderMetadata>(HeaderSymbol);
 export const RequestMetadataManager = metadataManagerFactory<RequestMetadata | {}>(RequestSymbol);
 export const MockMetadataManager = metadataManagerFactory<MockMetadata | {}>(MockSymbol);
 export const MergeMetadataManager = metadataManagerFactory<MergeMetadata>(MergeSymbol);

@@ -9,6 +9,7 @@ import {
 	MergeMetadataManager,
 	MockMetadataManager,
 	ParamMetadataManager,
+	HeaderMetadataManager,
 	RequestMetadataManager,
 } from './metadata';
 import type {
@@ -74,7 +75,7 @@ function useHttpClient(httpClient: HttpClient, signature?: string) {
 
 function Get({ request, response }: GetSchema) {
 	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		const { url, params, headers, wait } = request;
+		const { url, params, headers, wait, key: requestKey } = request;
 
 		const innerMethod = descriptor.value;
 
@@ -89,7 +90,8 @@ function Get({ request, response }: GetSchema) {
 			mergeArray
 		);
 
-		const paramsMetadataManager = new ParamMetadataManager({}, target, propertyKey);
+		const paramMetadataManager = new ParamMetadataManager({}, target, propertyKey);
+		const headerMetadataManager = new HeaderMetadataManager({}, target, propertyKey);
 		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
 		const mockMetadataManager = new MockMetadataManager({}, target);
 
@@ -101,7 +103,7 @@ function Get({ request, response }: GetSchema) {
 			beforeTransform,
 			afterTransform,
 			catcher,
-			name,
+			key: responseKey,
 		} = response || {};
 
 		const validatorList = validators && arrayFrom(validators);
@@ -134,12 +136,12 @@ function Get({ request, response }: GetSchema) {
 
 			const { httpClient, signature } = httpClientMetadata;
 
-			const paramsMetaData = paramsMetadataManager.get();
+			const paramMetadata = paramMetadataManager.get();
 
 			const reqParams =
 				params &&
 				Object.keys(params).reduce((res: { [index: string]: any }, k) => {
-					const { index, cb, value } = paramsMetaData[params[k]] || {};
+					const { index, cb, value } = paramMetadata[params[k]] || {};
 					res[k] =
 						typeof params[k] === 'symbol'
 							? value
@@ -151,6 +153,13 @@ function Get({ request, response }: GetSchema) {
 					return res;
 				}, {});
 
+			const headerMetadata = headerMetadataManager.get()
+
+			const reqHeaders = {
+				...(headers || {}),
+				...(requestKey ? (headerMetadata[requestKey] || {}) : {})
+			}
+
 			let resp;
 			const resMockData = (mockMetadata as any)[propertyKey];
 
@@ -161,7 +170,7 @@ function Get({ request, response }: GetSchema) {
 						resp = (httpClient.get as HttpClientGetWithConfig)({
 							url,
 							params: reqParams,
-							headers,
+							headers: reqHeaders
 						});
 						break;
 					case 'position':
@@ -170,7 +179,7 @@ function Get({ request, response }: GetSchema) {
 					case 'mix':
 						resp = (httpClient.get as HttpClientGetWithUrlAndConfig)(url, {
 							params: reqParams,
-							headers,
+							headers: reqHeaders
 						});
 						break;
 					default:
@@ -217,9 +226,9 @@ function Get({ request, response }: GetSchema) {
 						info._resolveTimes += 1;
 					});
 					return p.then((res: any) => {
-						if (name) {
-							paramsMetadataManager.set((m) => {
-								m[Symbol.for(name)] = { value: res };
+						if (responseKey) {
+							paramMetadataManager.set((m) => {
+								m[Symbol.for(responseKey)] = { value: res };
 							});
 						}
 						return res;
@@ -234,9 +243,9 @@ function Get({ request, response }: GetSchema) {
 				const next = mergeMetadata.merge(innerValue);
 				mergeMetadataManager.replace(next);
 				return p.then((res: any) => {
-					if (name) {
-						paramsMetadataManager.set((m) => {
-							m[Symbol.for(name)] = { value: res };
+					if (responseKey) {
+						paramMetadataManager.set((m) => {
+							m[Symbol.for(responseKey)] = { value: res };
 						});
 					}
 					return infoMetadataManager.get()._resolveTimes >= mergeMetadata.requestCount ? next(res) : res;
@@ -248,15 +257,24 @@ function Get({ request, response }: GetSchema) {
 
 function Params(key: string, cb?: (param: any) => any) {
 	return function (target: any, propertyKey: string, parameterIndex: number) {
-		if (key) {
-			const paramsMetadataManager = new ParamMetadataManager({}, target, propertyKey);
-			paramsMetadataManager.set((paramsMetadata) => {
-				paramsMetadata[Symbol.for(key)] = {
-					index: parameterIndex,
-					cb,
-				};
-			});
-		}
+		const paramMetadataManager = new ParamMetadataManager({}, target, propertyKey);
+		paramMetadataManager.set((paramMetadata) => {
+			paramMetadata[Symbol.for(key)] = {
+				index: parameterIndex,
+				cb,
+			};
+		});
+	};
+}
+
+function Headers(key: string) {
+	return function (target: any, propertyKey: string, parameterIndex: number) {
+		const headerMetadataManager = new HeaderMetadataManager({}, target, propertyKey);
+		headerMetadataManager.set((headerMetadata) => {
+			headerMetadata[key] = {
+				index: parameterIndex
+			}
+		})
 	};
 }
 
@@ -331,4 +349,4 @@ function Merge(merge: (...args: any[]) => any) {
 	};
 }
 
-export { useHttpClient, Get, Params, Mock, Merge };
+export { useHttpClient, Get, Params, Headers, Mock, Merge };

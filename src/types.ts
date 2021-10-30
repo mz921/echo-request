@@ -27,7 +27,8 @@ interface GetSchema {
 		url: string;
 		params?: { [prop: string]: any };
 		headers?: { [prop: string]: any };
-        wait ?: boolean
+        wait ?: boolean;
+        key ?: string;
 	};
 
 	response?: {
@@ -38,7 +39,7 @@ interface GetSchema {
 		beforeTransform?: ((response: any) => any) | ((response: any) => any)[];
 		afterTransform?: ((transformedResponse: any) => void) | ((transformedResponse: any) => void)[];
 		catcher?: (transformedResponse: any) => void;
-        name ?: string;
+        key ?: string;
 	};
 }
 
@@ -53,6 +54,12 @@ interface ParamMetadata {
 		cb?: (param: any) => any;
         value?: any
 	};
+}
+
+interface HeaderMetadata {
+    [index: string | symbol]: {
+        index: number
+    }
 }
 
 interface RequestMetadata {
@@ -93,6 +100,7 @@ export type {
 	GetSchema,
 	HttpClientMetadata,
 	ParamMetadata,
+    HeaderMetadata,
 	RequestMetadata,
 	MergeMetadata,
 	MockMetadata,
