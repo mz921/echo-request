@@ -57,5 +57,5 @@ export const HttpClientMetadataManager = metadataManagerFactory<HttpClientMetada
 export const ParamMetadataManager = metadataManagerFactory<ParamMetadata>(ParamSymbol);
 export const RequestMetadataManager = metadataManagerFactory<RequestMetadata | {}>(RequestSymbol);
 export const MockMetadataManager = metadataManagerFactory<MockMetadata | {}>(MockSymbol);
-export const MergeMetadataManager = metadataManagerFactory<MergeMetadata | undefined>(MergeSymbol);
+export const MergeMetadataManager = metadataManagerFactory<MergeMetadata>(MergeSymbol);
 export const InfoMetadataManager = metadataManagerFactory<InfoMetadata>(InfoSymbol);

@@ -71,7 +71,11 @@ interface RequestMetadata {
 
 type MockMetadata = Record<string, any>;
 
-type MergeMetadata = Function;
+type MergeInfo = {
+    requestCount: number,
+}
+
+type MergeMetadata = ({merge: Function} & MergeInfo)[]
 
 interface InfoMetadata {
 	_resolveTimes: number;

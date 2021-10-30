@@ -38,37 +38,43 @@ class TestService {
 	})
 	static getUsersFrom2Names(@Params('name1') name1: string, @Params('name2') name2: string): any {}
 
-	// @Merge((users, user3) => users.concat(user3))
-	// @Get({
-	// 	request: {
-	// 		url: '/test/users',
-	// 		params: {
-	// 			name: Symbol.for('name3'),
-	// 		},
-	// 	},
-	// })
-	// @Merge((user1, user2) => user1.concat(user2))
-	// @Get({
-	// 	request: {
-	// 		url: '/test/users',
-	// 		params: {
-	// 			name: Symbol.for('name2'),
-	// 		},
-	// 	},
-	// })
-	// @Get({
-	// 	request: {
-	// 		url: '/test/users',
-	// 		params: {
-	// 			name: Symbol.for('name1'),
-	// 		},
-	// 	},
-	// })
-	// static getUsersFrom3Names(
-	// 	@Params('name1') name1: string,
-	// 	@Params('name2') name2: string,
-	// 	@Params('name3') name3: string
-	// ): any {}
+	@Merge((users, user3) => {
+		console.log('merge2')
+		return users.concat(user3)
+	})
+	@Get({
+		request: {
+			url: '/test/users',
+			params: {
+				name: Symbol.for('name3'),
+			},
+		},
+	})
+	@Merge((user1, user2) => {
+			console.log('merge1')
+		 return user1.concat(user2)
+	})
+	@Get({
+		request: {
+			url: '/test/users',
+			params: {
+				name: Symbol.for('name2'),
+			},
+		},
+	})
+	@Get({
+		request: {
+			url: '/test/users',
+			params: {
+				name: Symbol.for('name1'),
+			},
+		},
+	})
+	static getUsersFrom3Names(
+		@Params('name1') name1: string,
+		@Params('name2') name2: string,
+		@Params('name3') name3: string
+	): any {}
 
 	// @Sequence
 	// @Get({
@@ -169,28 +175,28 @@ describe('GET Request', () => {
 		});
 	});
 
-	// test('merge scope', () => {
-	// 	return TestService.getUsersFrom3Names('Bethany Johns', 'Renee Gleichner', 'Wilfred Adams').then((res: any) => {
-	// 		expect(res).toEqual([
-	// 			{
-	// 				createdAt: '2021-10-28T04:10:26.100Z',
-	// 				name: 'Bethany Johns',
-	// 				avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
-	// 				id: '1',
-	// 			},
-	// 			{
-	// 				createdAt: '2021-10-28T08:28:49.712Z',
-	// 				name: 'Renee Gleichner',
-	// 				avatar: 'https://cdn.fakercloud.com/avatars/pcridesagain_128.jpg',
-	// 				id: '2',
-	// 			},
-	// 			{
-	// 				createdAt: '2021-10-28T21:31:57.354Z',
-	// 				name: 'Wilfred Adams',
-	// 				avatar: 'https://cdn.fakercloud.com/avatars/robergd_128.jpg',
-	// 				id: '3',
-	// 			},
-	// 		]);
-	// 	});
-	// });
+	test.only('merge scope', () => {
+		return TestService.getUsersFrom3Names('Bethany Johns', 'Renee Gleichner', 'Wilfred Adams').then((res: any) => {
+			expect(res).toEqual([
+				{
+					createdAt: '2021-10-28T04:10:26.100Z',
+					name: 'Bethany Johns',
+					avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
+					id: '1',
+				},
+				{
+					createdAt: '2021-10-28T08:28:49.712Z',
+					name: 'Renee Gleichner',
+					avatar: 'https://cdn.fakercloud.com/avatars/pcridesagain_128.jpg',
+					id: '2',
+				},
+				{
+					createdAt: '2021-10-28T21:31:57.354Z',
+					name: 'Wilfred Adams',
+					avatar: 'https://cdn.fakercloud.com/avatars/robergd_128.jpg',
+					id: '3',
+				},
+			]);
+		});
+	});
 });

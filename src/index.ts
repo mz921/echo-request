@@ -88,7 +88,7 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 		);
 
 		const paramsMetadataManager = new ParamMetadataManager({}, target, propertyKey);
-		const mergeMetadataManager = new MergeMetadataManager(undefined, target, propertyKey);
+		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
 		const mockMetadataManager = new MockMetadataManager({}, target);
 
 		const { validators, transformers, beforeValidate, afterValidate, beforeTransform, afterTransform, catcher } =
@@ -101,11 +101,14 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 		const beforeTransformList = beforeTransform && arrayFrom(beforeTransform);
 		const afterTransformList = afterTransform && arrayFrom(afterTransform);
 
+		//TODO: handle merge funcs
+		const invisibleMergeFuncs = mergeMetadataManager.get()
+
 		descriptor.value = function (this: any, ...parameters: any[]) {
 			const requestMetadata = requestMetadataManager.get();
 			const httpClientMetadata = httpClientMetadataManager.get();
 			const paramsMetaData = paramsMetadataManager.get();
-			const merge = mergeMetadataManager.get();
+			const mergeMetadata = mergeMetadataManager.get().filter((f) => !invisibleMergeFuncs.includes(f))[0]
 			const mockMetadata = mockMetadataManager.get();
 
 			isNotEmptyObject(requestMetadata, 'request metadata can not be empty');
@@ -113,8 +116,6 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 				httpClientMetadata,
 				'No Http Client! Maybe forgot to call useHttpClient before using this'
 			);
-
-			const requestCounts = requestMetadata.get.length;
 
 			const innerP = Promise.resolve(innerMethod.call(this, ...parameters));
 
@@ -188,15 +189,17 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 				});
 
 			if (catcher) p = p.catch(catcher);
-			if (!merge && requestCounts >= 2) {
-				runOnce(() => {
-					console.warn(
-						'Use merge decorator to merge multiple request responses, otherwise outer request response would cover the inner request response as the final result.'
-					);
-				});
-			}
 
-			if (!merge) {
+			// TODO: need correct requestCount
+			// if (!mergeMetadata && requestCounts >= 2) {
+			// 	runOnce(() => {
+			// 		console.warn(
+			// 			'Use merge decorator to merge multiple request responses, otherwise outer request response would cover the inner request response as the final result.'
+			// 		);
+			// 	});
+			// }
+
+			if (!mergeMetadata) {
 				return innerP.then(() => {
 					infoMetadataManager.set((info) => {
 						info._resolveTimes += 1;
@@ -209,10 +212,10 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 				infoMetadataManager.set((info) => {
 					info._resolveTimes += 1;
 				});
-				const next = merge(innerValue);
+				const next = mergeMetadata.merge(innerValue);
 				mergeMetadataManager.replace(next);
 				return p.then((res: any) =>
-					infoMetadataManager.get()._resolveTimes >= requestCounts ? next(res) : res
+					infoMetadataManager.get()._resolveTimes >= mergeMetadata.requestCount ? next(res) : res
 				);
 			});
 		};
@@ -278,13 +281,35 @@ function Mock(mockData: { [index: string]: any }) {
 
 function Merge(merge: (...args: any[]) => any) {
 	return function (target: any, propertyKey: string) {
-		const mergeMetadataManager = new MergeMetadataManager(undefined, target, propertyKey);
-		mergeMetadataManager.replace(skipFirstRun(curry(merge)));
+		const requestMetadataManager = new RequestMetadataManager({}, target, propertyKey)
+		const requestMetadata = requestMetadataManager.get()
+
+		isNotEmptyObject(requestMetadata);
+
+		const requestCount = requestMetadata.get.length
+
+		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
+
+		mergeMetadataManager.set((mergeFuncs) => {
+			if (mergeFuncs.length === 0) {
+				// Use skipFirstRun to skip the execution of the bottom method
+				mergeFuncs.push({
+					merge: skipFirstRun(curry(merge)),
+					requestCount
+				})
+			}else {
+				mergeFuncs.push({
+					merge: curry(merge),
+					requestCount
+				})
+			}
+		})
+		
 	};
 }
 
 function Sequence(targer: any, propertyKey: string) {
-	
+
 }
 
 export { useHttpClient, Get, Params, Mock, Merge };
