@@ -27,6 +27,7 @@ interface GetSchema {
 		url: string;
 		params?: { [prop: string]: any };
 		headers?: { [prop: string]: any };
+        wait ?: boolean
 	};
 
 	response?: {
@@ -48,8 +49,9 @@ interface HttpClientMetadata {
 
 interface ParamMetadata {
 	[index: symbol]: {
-		index: number;
+		index?: number;
 		cb?: (param: any) => any;
+        value?: any
 	};
 }
 

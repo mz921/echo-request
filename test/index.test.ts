@@ -39,8 +39,7 @@ class TestService {
 	static getUsersFrom2Names(@Params('name1') name1: string, @Params('name2') name2: string): any {}
 
 	@Merge((users, user3) => {
-		console.log('merge2')
-		return users.concat(user3)
+		return users.concat(user3);
 	})
 	@Get({
 		request: {
@@ -51,8 +50,7 @@ class TestService {
 		},
 	})
 	@Merge((user1, user2) => {
-			console.log('merge1')
-		 return user1.concat(user2)
+		return user1.concat(user2);
 	})
 	@Get({
 		request: {
@@ -76,28 +74,28 @@ class TestService {
 		@Params('name3') name3: string
 	): any {}
 
-	// @Sequence
-	// @Get({
-	// 	request: {
-	// 		url: '/test/articles',
-	// 		params: {
-	// 			author: Symbol.for('userID')
-	// 		}
-	// 	}
-	// })
-	// @Get({
-	// 	request: {
-	// 		url: '/test/users',
-	// 		params: {
-	// 			name: Symbol.for('name')
-	// 		}
-	// 	},
-	// 	response: {
-	// 		transformers: (users) => users[0].id,
-	// 		name: "userID"
-	// 	}
-	// })
-	// static getArticlesFromUser(@Params('name') name: string): any {}
+	@Get({
+		request: {
+			url: '/test/articles',
+			params: {
+				author: Symbol.for('userID'),
+			},
+			wait: true,
+		},
+	})
+	@Get({
+		request: {
+			url: '/test/users',
+			params: {
+				name: Symbol.for('name'),
+			},
+		},
+		response: {
+			transformers: (users) => users[0].id,
+			name: 'userID',
+		},
+	})
+	static getArticlesFromUser(@Params('name') name: string): any {}
 }
 
 class HttpClient {
@@ -175,7 +173,7 @@ describe('GET Request', () => {
 		});
 	});
 
-	test.only('merge scope', () => {
+	test('merge scope', () => {
 		return TestService.getUsersFrom3Names('Bethany Johns', 'Renee Gleichner', 'Wilfred Adams').then((res: any) => {
 			expect(res).toEqual([
 				{
@@ -195,6 +193,19 @@ describe('GET Request', () => {
 					name: 'Wilfred Adams',
 					avatar: 'https://cdn.fakercloud.com/avatars/robergd_128.jpg',
 					id: '3',
+				},
+			]);
+		});
+	});
+
+	test('wait', () => {
+		return TestService.getArticlesFromUser('Gordon Heller').then((res: any) => {
+			expect(res).toEqual([
+				{
+					createdAt: '2021-10-28T04:03:36.008Z',
+					title: 'Chief Operations Planner',
+					author: 36,
+					id: '2',
 				},
 			]);
 		});

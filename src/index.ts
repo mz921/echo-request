@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import Joi from 'joi';
 import curry from 'just-curry-it';
 import _mergeWith from 'lodash.mergewith';
-import { arrayFrom, runAll, mergeArray, runOnce, skipFirstRun, isNotEmptyObject, assertIsDefined } from './utils';
+import { arrayFrom, runAll, mergeArray, skipFirstRun, isNotEmptyObject, assertIsDefined } from './utils';
 import {
 	HttpClientMetadataManager,
 	InfoMetadataManager,
@@ -72,8 +72,10 @@ function useHttpClient(httpClient: HttpClient, signature?: string) {
 	});
 }
 
-function Get({ request: { url, params, headers }, response }: GetSchema) {
+function Get({ request, response }: GetSchema) {
 	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+		const { url, params, headers, wait } = request;
+
 		const innerMethod = descriptor.value;
 
 		const infoMetadataManager = new InfoMetadataManager({ _resolveTimes: 0 }, target, propertyKey);
@@ -91,8 +93,16 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
 		const mockMetadataManager = new MockMetadataManager({}, target);
 
-		const { validators, transformers, beforeValidate, afterValidate, beforeTransform, afterTransform, catcher } =
-			response || {};
+		const {
+			validators,
+			transformers,
+			beforeValidate,
+			afterValidate,
+			beforeTransform,
+			afterTransform,
+			catcher,
+			name,
+		} = response || {};
 
 		const validatorList = validators && arrayFrom(validators);
 		const transformerList = transformers && arrayFrom(transformers);
@@ -102,13 +112,12 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 		const afterTransformList = afterTransform && arrayFrom(afterTransform);
 
 		//TODO: handle merge funcs
-		const invisibleMergeFuncs = mergeMetadataManager.get()
+		const invisibleMergeFuncs = mergeMetadataManager.get();
 
-		descriptor.value = function (this: any, ...parameters: any[]) {
+		descriptor.value = async function (this: any, ...parameters: any[]) {
 			const requestMetadata = requestMetadataManager.get();
 			const httpClientMetadata = httpClientMetadataManager.get();
-			const paramsMetaData = paramsMetadataManager.get();
-			const mergeMetadata = mergeMetadataManager.get().filter((f) => !invisibleMergeFuncs.includes(f))[0]
+			const mergeMetadata = mergeMetadataManager.get().filter((f) => !invisibleMergeFuncs.includes(f))[0];
 			const mockMetadata = mockMetadataManager.get();
 
 			isNotEmptyObject(requestMetadata, 'request metadata can not be empty');
@@ -119,14 +128,26 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 
 			const innerP = Promise.resolve(innerMethod.call(this, ...parameters));
 
+			if (wait) {
+				await innerP;
+			}
+
 			const { httpClient, signature } = httpClientMetadata;
+
+			const paramsMetaData = paramsMetadataManager.get();
 
 			const reqParams =
 				params &&
 				Object.keys(params).reduce((res: { [index: string]: any }, k) => {
-					const { index, cb } = paramsMetaData[params[k]] || {};
+					const { index, cb, value } = paramsMetaData[params[k]] || {};
 					res[k] =
-						typeof params[k] === 'symbol' ? (cb ? cb(parameters[index]) : parameters[index]) : params[k];
+						typeof params[k] === 'symbol'
+							? value
+								? value
+								: cb
+								? cb(parameters[index!])
+								: parameters[index!]
+							: params[k];
 					return res;
 				}, {});
 
@@ -190,21 +211,19 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 
 			if (catcher) p = p.catch(catcher);
 
-			// TODO: need correct requestCount
-			// if (!mergeMetadata && requestCounts >= 2) {
-			// 	runOnce(() => {
-			// 		console.warn(
-			// 			'Use merge decorator to merge multiple request responses, otherwise outer request response would cover the inner request response as the final result.'
-			// 		);
-			// 	});
-			// }
-
 			if (!mergeMetadata) {
 				return innerP.then(() => {
 					infoMetadataManager.set((info) => {
 						info._resolveTimes += 1;
 					});
-					return p;
+					return p.then((res: any) => {
+						if (name) {
+							paramsMetadataManager.set((m) => {
+								m[Symbol.for(name)] = { value: res };
+							});
+						}
+						return res;
+					});
 				});
 			}
 
@@ -214,9 +233,14 @@ function Get({ request: { url, params, headers }, response }: GetSchema) {
 				});
 				const next = mergeMetadata.merge(innerValue);
 				mergeMetadataManager.replace(next);
-				return p.then((res: any) =>
-					infoMetadataManager.get()._resolveTimes >= mergeMetadata.requestCount ? next(res) : res
-				);
+				return p.then((res: any) => {
+					if (name) {
+						paramsMetadataManager.set((m) => {
+							m[Symbol.for(name)] = { value: res };
+						});
+					}
+					return infoMetadataManager.get()._resolveTimes >= mergeMetadata.requestCount ? next(res) : res;
+				});
 			});
 		};
 	};
@@ -281,12 +305,12 @@ function Mock(mockData: { [index: string]: any }) {
 
 function Merge(merge: (...args: any[]) => any) {
 	return function (target: any, propertyKey: string) {
-		const requestMetadataManager = new RequestMetadataManager({}, target, propertyKey)
-		const requestMetadata = requestMetadataManager.get()
+		const requestMetadataManager = new RequestMetadataManager({}, target, propertyKey);
+		const requestMetadata = requestMetadataManager.get();
 
 		isNotEmptyObject(requestMetadata);
 
-		const requestCount = requestMetadata.get.length
+		const requestCount = requestMetadata.get.length;
 
 		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
 
@@ -295,21 +319,16 @@ function Merge(merge: (...args: any[]) => any) {
 				// Use skipFirstRun to skip the execution of the bottom method
 				mergeFuncs.push({
 					merge: skipFirstRun(curry(merge)),
-					requestCount
-				})
-			}else {
+					requestCount,
+				});
+			} else {
 				mergeFuncs.push({
 					merge: curry(merge),
-					requestCount
-				})
+					requestCount,
+				});
 			}
-		})
-		
+		});
 	};
-}
-
-function Sequence(targer: any, propertyKey: string) {
-
 }
 
 export { useHttpClient, Get, Params, Mock, Merge };
