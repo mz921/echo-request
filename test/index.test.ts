@@ -1,4 +1,4 @@
-import { Get, useHttpClient, Params, Merge, Headers } from '../src/index';
+import { Get, useHttpClient, Params, Merge, Headers, Res, InjectRes, Catch } from '../src/index';
 import https from 'https';
 
 class TestService {
@@ -6,10 +6,34 @@ class TestService {
 		request: {
 			url: '/test/users',
 			headers: {},
-			key: "getUsers"
+			key: 'getUsers',
 		},
 	})
-	static getUsers(@Headers('getUsers') headers?: Object): any {}
+	static getUsers(): any {}
+
+	@Catch((e: any) => e.message)
+	@Get({
+		request: {
+			url: '/test/uers',
+			headers: {},
+			key: 'getUsers',
+		},
+	})
+	static getUsersWithWrongURL(): any {}
+
+	@InjectRes
+	@Get({
+		request: {
+			url: '/test/users',
+			headers: {},
+			key: 'getUsers',
+		},
+	})
+	static getUserData(@Res res?: any): any {
+		return {
+			data: res,
+		};
+	}
 
 	@Get({
 		request: {
@@ -212,4 +236,16 @@ describe('GET Request', () => {
 			]);
 		});
 	});
+
+	test('inject res', () => {
+		return TestService.getUserData().then((res: any) => {
+			expect(res.data).toHaveLength(50);
+		});
+	});
+
+	test('catch', () => {
+		return TestService.getUsersWithWrongURL().then((res: any) => {
+			expect(res).toBe('Not found')
+		})
+	})
 });

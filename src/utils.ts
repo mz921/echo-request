@@ -39,11 +39,12 @@ function isNotEmptyObject<T>(obj: {} | T, msg?: string): asserts obj is T {
     if (Object.keys(obj).length === 0) throw new Error(msg || "Object can not be empty")
 }
 
-function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+function assertIsDefined<T>(val: T, msg?: string): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
     throw new Error(
-      `Expected 'val' to be defined, but received ${val}`
+      msg || `Expected 'val' to be defined, but received ${val}`
     );
   }
 }
+
 export { arrayFrom, runAll, mergeArray, runOnce, skipFirstRun, isNotEmptyObject, assertIsDefined };

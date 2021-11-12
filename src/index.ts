@@ -11,6 +11,7 @@ import {
 	ParamMetadataManager,
 	HeaderMetadataManager,
 	RequestMetadataManager,
+	ResponseMetadataManager,
 } from './metadata';
 import type {
 	Validator,
@@ -79,8 +80,6 @@ function Get({ request, response }: GetSchema) {
 
 		const innerMethod = descriptor.value;
 
-		const infoMetadataManager = new InfoMetadataManager({ _resolveTimes: 0 }, target, propertyKey);
-
 		const requestMetadataManager = new RequestMetadataManager({}, target, propertyKey);
 		_mergeWith(
 			requestMetadataManager.get(),
@@ -88,6 +87,19 @@ function Get({ request, response }: GetSchema) {
 				get: [{ url, params, headers }],
 			},
 			mergeArray
+		);
+
+		const innerMethodIsOriginalMethod =
+			Object.values(requestMetadataManager.get()).reduce((res, cur) => {
+				return res + cur.length;
+			}, 0) === 1
+				? true
+				: false;
+
+		const infoMetadataManager = new InfoMetadataManager(
+			{ resolveTimes: 0, originalMethod: descriptor.value },
+			target,
+			propertyKey
 		);
 
 		const paramMetadataManager = new ParamMetadataManager({}, target, propertyKey);
@@ -128,7 +140,9 @@ function Get({ request, response }: GetSchema) {
 				'No Http Client! Maybe forgot to call useHttpClient before using this'
 			);
 
-			const innerP = Promise.resolve(innerMethod.call(this, ...parameters));
+			const innerP = Promise.resolve(
+				!innerMethodIsOriginalMethod ? innerMethod.call(this, ...parameters) : undefined
+			);
 
 			if (wait) {
 				await innerP;
@@ -153,12 +167,12 @@ function Get({ request, response }: GetSchema) {
 					return res;
 				}, {});
 
-			const headerMetadata = headerMetadataManager.get()
+			const headerMetadata = headerMetadataManager.get();
 
 			const reqHeaders = {
 				...(headers || {}),
-				...(requestKey ? (headerMetadata[requestKey] || {}) : {})
-			}
+				...(requestKey ? headerMetadata[requestKey] || {} : {}),
+			};
 
 			let resp;
 			const resMockData = (mockMetadata as any)[propertyKey];
@@ -170,7 +184,7 @@ function Get({ request, response }: GetSchema) {
 						resp = (httpClient.get as HttpClientGetWithConfig)({
 							url,
 							params: reqParams,
-							headers: reqHeaders
+							headers: reqHeaders,
 						});
 						break;
 					case 'position':
@@ -179,7 +193,7 @@ function Get({ request, response }: GetSchema) {
 					case 'mix':
 						resp = (httpClient.get as HttpClientGetWithUrlAndConfig)(url, {
 							params: reqParams,
-							headers: reqHeaders
+							headers: reqHeaders,
 						});
 						break;
 					default:
@@ -223,7 +237,7 @@ function Get({ request, response }: GetSchema) {
 			if (!mergeMetadata) {
 				return innerP.then(() => {
 					infoMetadataManager.set((info) => {
-						info._resolveTimes += 1;
+						info.resolveTimes += 1;
 					});
 					return p.then((res: any) => {
 						if (responseKey) {
@@ -238,7 +252,7 @@ function Get({ request, response }: GetSchema) {
 
 			return innerP.then((innerValue) => {
 				infoMetadataManager.set((info) => {
-					info._resolveTimes += 1;
+					info.resolveTimes += 1;
 				});
 				const next = mergeMetadata.merge(innerValue);
 				mergeMetadataManager.replace(next);
@@ -248,7 +262,7 @@ function Get({ request, response }: GetSchema) {
 							m[Symbol.for(responseKey)] = { value: res };
 						});
 					}
-					return infoMetadataManager.get()._resolveTimes >= mergeMetadata.requestCount ? next(res) : res;
+					return infoMetadataManager.get().resolveTimes >= mergeMetadata.requestCount ? next(res) : res;
 				});
 			});
 		};
@@ -272,10 +286,39 @@ function Headers(key: string) {
 		const headerMetadataManager = new HeaderMetadataManager({}, target, propertyKey);
 		headerMetadataManager.set((headerMetadata) => {
 			headerMetadata[key] = {
-				index: parameterIndex
-			}
-		})
+				index: parameterIndex,
+			};
+		});
 	};
+}
+
+function Req
+
+function Res(target: any, propertyKey: string, parameterIndex: number) {
+	const responseMetadataManager = new ResponseMetadataManager({ index: 0 }, target, propertyKey);
+
+	responseMetadataManager.set((m) => {
+		m.index = parameterIndex;
+	});
+}
+
+// Must be used on the top of decorators chain
+function InjectRes(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+	const request = descriptor.value;
+	const originalMethod = new InfoMetadataManager({} as any, target, propertyKey).get().originalMethod;
+
+	assertIsDefined(originalMethod, 'InjectRes must be used on the top of decorators chain');
+
+	const injectedIndex = new ResponseMetadataManager({} as any, target, propertyKey).get().index;
+
+	assertIsDefined(injectedIndex, 'InjectRes must be used with Res decorator');
+
+	descriptor.value = () =>
+		request().then((res: any) =>
+			originalMethod(
+				...new Array(injectedIndex + 1).fill(undefined).map((v, i) => (i !== injectedIndex ? v : res))
+			)
+		);
 }
 
 function Mock(mockData: { [index: string]: any }) {
@@ -349,4 +392,14 @@ function Merge(merge: (...args: any[]) => any) {
 	};
 }
 
-export { useHttpClient, Get, Params, Headers, Mock, Merge };
+function Catch(catcher: Function) {
+	return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+		const request = descriptor.value;
+
+		descriptor.value = () => request().catch(catcher);
+	};
+}
+
+// TODO: Req decorator: reuse other request
+
+export { useHttpClient, Get, Params, Headers, Mock, Merge, Res, InjectRes, Catch };

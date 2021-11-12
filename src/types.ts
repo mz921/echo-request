@@ -78,6 +78,10 @@ interface RequestMetadata {
 	}[];
 }
 
+interface ResponseMetadata {
+	index: number
+}
+
 type MockMetadata = Record<string, any>;
 
 type MergeInfo = {
@@ -87,7 +91,9 @@ type MergeInfo = {
 type MergeMetadata = ({merge: Function} & MergeInfo)[]
 
 interface InfoMetadata {
-	_resolveTimes: number;
+	resolveTimes: number;
+
+	originalMethod: Function
 }
 
 export type {
@@ -102,6 +108,7 @@ export type {
 	ParamMetadata,
     HeaderMetadata,
 	RequestMetadata,
+	ResponseMetadata,
 	MergeMetadata,
 	MockMetadata,
 	InfoMetadata,
