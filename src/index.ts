@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import Joi from 'joi';
 import curry from 'just-curry-it';
 import _mergeWith from 'lodash.mergewith';
-import { arrayFrom, runAll, mergeArray, skipFirstRun, isNotEmptyObject, assertIsDefined } from './utils';
+import { mergeArray, skipFirstRun, isNotEmptyObject, assertIsDefined } from './utils';
 import {
 	HttpClientMetadataManager,
 	InfoMetadataManager,
@@ -14,58 +13,16 @@ import {
 	ResponseMetadataManager,
 } from './metadata';
 import type {
-	Validator,
-	Transformer,
 	HttpClient,
-	GetSchema,
-	HttpClientGetWithConfig,
-	HttpClientGet,
-	HttpClientGetWithUrlAndConfig,
+	GetDecoratorConfig,
+	PostDecoratorConfig,
+	RequestDecoratorConfig,
 } from './types';
-
-const GlobalTarget = {};
+import { initRequest } from './init';
+import { GlobalTarget } from './constants';
+import { DeepOmit } from 'ts-essentials';
 
 const httpClientMetadataManager = new HttpClientMetadataManager({}, GlobalTarget);
-
-const validate = (validators: Validator[] | undefined, data: any, ...parameters: any[]) => {
-	if (!validators) return data;
-
-	arrayFrom(validators).forEach((validator: Validator) => {
-		if (!Joi.isSchema(validator)) {
-			if (typeof validator !== 'function') {
-				console.warn('Invalid Validator Type. The type must be Joi schema or function');
-				return;
-			}
-			const { error } = validator(data, ...parameters) || {};
-			if (!error) return;
-			throw error;
-		}
-		const { error } = validator.validate(data);
-		if (!error) return;
-		throw error;
-	});
-
-	return data;
-};
-
-const transform = (transformers: Transformer[] | undefined, data: any, ...parameters: any[]) => {
-	if (!transformers) return data;
-
-	return arrayFrom(transformers).reduce((res, transformer) => {
-		if (typeof transformer !== 'function') {
-			console.warn('The transformer must be a function');
-			return;
-		}
-
-		try {
-			return transformer(res, ...parameters);
-		} catch (e) {
-			console.warn('Transform failed. Try to add a validator to solve this. ');
-			console.warn(e);
-			return res;
-		}
-	}, data);
-};
 
 function useHttpClient(httpClient: HttpClient, signature?: string) {
 	httpClientMetadataManager.replace({
@@ -74,27 +31,19 @@ function useHttpClient(httpClient: HttpClient, signature?: string) {
 	});
 }
 
-function Get({ request, response }: GetSchema) {
+function Req(reqDecoratorConfig: RequestDecoratorConfig) {
 	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-		const { url, params, headers, wait, key: requestKey } = request;
-
 		const innerMethod = descriptor.value;
-
 		const requestMetadataManager = new RequestMetadataManager({}, target, propertyKey);
+
+		// push placeholders, since the merge decorator needs that to determine merged request counts.
 		_mergeWith(
 			requestMetadataManager.get(),
 			{
-				get: [{ url, params, headers }],
+				placeholder: [1],
 			},
 			mergeArray
 		);
-
-		const innerMethodIsOriginalMethod =
-			Object.values(requestMetadataManager.get()).reduce((res, cur) => {
-				return res + cur.length;
-			}, 0) === 1
-				? true
-				: false;
 
 		const infoMetadataManager = new InfoMetadataManager(
 			{ resolveTimes: 0, originalMethod: descriptor.value },
@@ -102,137 +51,46 @@ function Get({ request, response }: GetSchema) {
 			propertyKey
 		);
 
-		const paramMetadataManager = new ParamMetadataManager({}, target, propertyKey);
-		const headerMetadataManager = new HeaderMetadataManager({}, target, propertyKey);
 		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
-		const mockMetadataManager = new MockMetadataManager({}, target);
+		const paramMetadataManager = new ParamMetadataManager({}, target, propertyKey);
 
-		const {
-			validators,
-			transformers,
-			beforeValidate,
-			afterValidate,
-			beforeTransform,
-			afterTransform,
-			catcher,
-			key: responseKey,
-		} = response || {};
-
-		const validatorList = validators && arrayFrom(validators);
-		const transformerList = transformers && arrayFrom(transformers);
-		const beforeValidateList = beforeValidate && arrayFrom(beforeValidate);
-		const afterValidateList = afterValidate && arrayFrom(afterValidate);
-		const beforeTransformList = beforeTransform && arrayFrom(beforeTransform);
-		const afterTransformList = afterTransform && arrayFrom(afterTransform);
-
-		//TODO: handle merge funcs
 		const invisibleMergeFuncs = mergeMetadataManager.get();
 
+		const innerMethodIsOriginalMethod = innerMethod === infoMetadataManager.get().originalMethod;
+
 		descriptor.value = async function (this: any, ...parameters: any[]) {
-			const requestMetadata = requestMetadataManager.get();
-			const httpClientMetadata = httpClientMetadataManager.get();
-			const mergeMetadata = mergeMetadataManager.get().filter((f) => !invisibleMergeFuncs.includes(f))[0];
-			const mockMetadata = mockMetadataManager.get();
-
-			isNotEmptyObject(requestMetadata, 'request metadata can not be empty');
-			isNotEmptyObject(
-				httpClientMetadata,
-				'No Http Client! Maybe forgot to call useHttpClient before using this'
-			);
-
 			const innerP = Promise.resolve(
 				!innerMethodIsOriginalMethod ? innerMethod.call(this, ...parameters) : undefined
 			);
 
-			if (wait) {
+			if ((reqDecoratorConfig as any).request?.wait) {
 				await innerP;
 			}
 
-			const { httpClient, signature } = httpClientMetadata;
+			const request: { [index: string]: any } = initRequest(reqDecoratorConfig, {
+				target,
+				propertyKey,
+				parameters,
+			});
 
-			const paramMetadata = paramMetadataManager.get();
-
-			const reqParams =
-				params &&
-				Object.keys(params).reduce((res: { [index: string]: any }, k) => {
-					const { index, cb, value } = paramMetadata[params[k]] || {};
-					res[k] =
-						typeof params[k] === 'symbol'
-							? value
-								? value
-								: cb
-								? cb(parameters[index!])
-								: parameters[index!]
-							: params[k];
-					return res;
-				}, {});
-
-			const headerMetadata = headerMetadataManager.get();
-
-			const reqHeaders = {
-				...(headers || {}),
-				...(requestKey ? headerMetadata[requestKey] || {} : {}),
-			};
-
-			let resp;
-			const resMockData = (mockMetadata as any)[propertyKey];
-
-			if (resMockData) resp = Promise.resolve(resMockData.find(({ url: u }: { url: string }) => u === url));
-			else {
-				switch (signature) {
-					case 'name':
-						resp = (httpClient.get as HttpClientGetWithConfig)({
-							url,
-							params: reqParams,
-							headers: reqHeaders,
-						});
-						break;
-					case 'position':
-						resp = (httpClient.get as HttpClientGet)(url, reqParams, headers);
-						break;
-					case 'mix':
-						resp = (httpClient.get as HttpClientGetWithUrlAndConfig)(url, {
-							params: reqParams,
-							headers: reqHeaders,
-						});
-						break;
-					default:
-						break;
-				}
+			if ((requestMetadataManager.get() as any).placeholder) {
+				requestMetadataManager.set((requestMetadata) => {
+					delete (requestMetadata as any)['placeholder'];
+				});
 			}
 
-			assertIsDefined(resp);
+			_mergeWith(
+				requestMetadataManager.get(),
+				{
+					[request.method || 'ANONYMOUS']: [request],
+				},
+				mergeArray
+			);
 
-			let responseData: unknown;
-			let p = resp
-				.then((res: any) => (responseData = res))
-				.then(() => {
-					if (beforeValidateList) {
-						runAll(beforeValidateList, responseData);
-					}
-				})
-				.then(() => {
-					validate(validatorList, responseData, ...parameters);
-				})
-				.then(() => {
-					if (afterValidateList) {
-						runAll(afterValidateList, responseData);
-					}
-				})
-				.then(() => {
-					if (beforeTransformList) {
-						return beforeTransformList.reduce((res, cur) => cur(res), responseData);
-					}
-				})
-				.then((res: any) => transform(transformerList, res || responseData, ...parameters))
-				.then((transformedData: any) => {
-					if (afterTransformList) {
-						runAll(afterTransformList, transformedData);
-					}
-					return transformedData;
-				});
+			const mergeMetadata = mergeMetadataManager.get().filter((f) => !invisibleMergeFuncs.includes(f))[0];
 
-			if (catcher) p = p.catch(catcher);
+			const p = request.send(...(request.sendArguments || []));
+			const responseKey = request.responseKey;
 
 			if (!mergeMetadata) {
 				return innerP.then(() => {
@@ -269,6 +127,30 @@ function Get({ request, response }: GetSchema) {
 	};
 }
 
+function Get(getDecoratorConfig: DeepOmit<GetDecoratorConfig, {request: {method: never}}>) {
+	return Req({
+		request: {
+			method: 'GET',
+			...getDecoratorConfig.request
+		},
+		response: {
+			...getDecoratorConfig.response
+		}
+	})
+}
+
+function Post(postDecoratorConfig: DeepOmit<PostDecoratorConfig, {request: {method: never}}>) {
+	return Req({
+		request: {
+			method: 'POST',
+			...postDecoratorConfig.request
+		},
+		response: {
+			...postDecoratorConfig.response
+		}
+	})
+}
+
 function Params(key: string, cb?: (param: any) => any) {
 	return function (target: any, propertyKey: string, parameterIndex: number) {
 		const paramMetadataManager = new ParamMetadataManager({}, target, propertyKey);
@@ -291,8 +173,6 @@ function Headers(key: string) {
 		});
 	};
 }
-
-function Req
 
 function Res(target: any, propertyKey: string, parameterIndex: number) {
 	const responseMetadataManager = new ResponseMetadataManager({ index: 0 }, target, propertyKey);
@@ -333,18 +213,16 @@ function Mock(mockData: { [index: string]: any }) {
 
 			isNotEmptyObject(requestMetadata);
 
-			return requestMetadata.get
-				.map(({ url }: { url: string }) => {
-					if (!mockData[url]) {
-						console.warn(`Can not find mock data for ${url}`);
-						return null;
-					}
-					return {
-						url,
-						mockData: mockData[url],
-					};
-				})
-				.filter((d: object | null) => d);
+			return requestMetadata.GET.map(({ url }: { url: string }) => {
+				if (!mockData[url]) {
+					console.warn(`Can not find mock data for ${url}`);
+					return null;
+				}
+				return {
+					url,
+					mockData: mockData[url],
+				};
+			}).filter((d: object | null) => d);
 		};
 
 		if (!propertyKey) {
@@ -371,7 +249,7 @@ function Merge(merge: (...args: any[]) => any) {
 
 		isNotEmptyObject(requestMetadata);
 
-		const requestCount = requestMetadata.get.length;
+		const requestCount = Object.values(requestMetadata).reduce((res, cur) => res + cur.length, 0);
 
 		const mergeMetadataManager = new MergeMetadataManager([], target, propertyKey);
 
@@ -394,12 +272,11 @@ function Merge(merge: (...args: any[]) => any) {
 
 function Catch(catcher: Function) {
 	return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+
 		const request = descriptor.value;
 
 		descriptor.value = () => request().catch(catcher);
 	};
 }
 
-// TODO: Req decorator: reuse other request
-
-export { useHttpClient, Get, Params, Headers, Mock, Merge, Res, InjectRes, Catch };
+export { useHttpClient, Req, Get, Post, Params, Headers, Mock, Merge, Res, InjectRes, Catch };

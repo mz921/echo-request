@@ -1,20 +1,52 @@
-import { Get, useHttpClient, Params, Merge, Headers, Res, InjectRes, Catch } from '../src/index';
-import https from 'https';
+import { Req, Get, Post, useHttpClient, Params, Merge, Headers, Res, InjectRes, Catch } from '../src/index';
+import HttpClient from './httpClient';
 
 class TestService {
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			headers: {},
 			key: 'getUsers',
 		},
 	})
 	static getUsers(): any {}
 
-	@Catch((e: any) => e.message)
 	@Get({
 		request: {
-			url: '/test/uers',
+			url: '/users',
+			headers: {},
+			key: 'getUsers',
+		},
+	})
+	static getUsersWithGetDecorator(): any {}
+
+	@Get({
+		request: {
+			url: '/users',
+			headers: {},
+			key: 'getUsers',
+			wait: true
+		},
+	})	
+	@Post({
+		request: {
+			url: '/users',
+			data: {
+				createdAt: '2021-12-01T12:11:51.534Z',
+				name: 'james mcavoy',
+				avatar: 'https://cdn.fakercloud.com/avatars/pierre_nel_128.jpg',
+				id: '51',
+			},	
+		},
+	})
+	static createUser(): any {}
+
+	@Catch((e: any) => e.statusCode)
+	@Req({
+		request: {
+			method: 'GET',
+			url: '/uers',
 			headers: {},
 			key: 'getUsers',
 		},
@@ -22,9 +54,10 @@ class TestService {
 	static getUsersWithWrongURL(): any {}
 
 	@InjectRes
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			headers: {},
 			key: 'getUsers',
 		},
@@ -35,9 +68,10 @@ class TestService {
 		};
 	}
 
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name'),
 			},
@@ -45,18 +79,28 @@ class TestService {
 	})
 	static getUserFromName(@Params('name') name: string): any {}
 
-	@Merge((user1, user2) => user1.concat(user2))
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			send: TestService.getUserFromName,
+			sendArguments: [Symbol.for('name')]
+		}
+	})
+	static getUserFromService(@Params('name') name: string): any {}
+
+	@Merge((user1, user2) => user1.concat(user2))
+	@Req({
+		request: {
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name2'),
 			},
 		},
 	})
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name1'),
 			},
@@ -67,9 +111,10 @@ class TestService {
 	@Merge((users, user3) => {
 		return users.concat(user3);
 	})
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name3'),
 			},
@@ -78,17 +123,19 @@ class TestService {
 	@Merge((user1, user2) => {
 		return user1.concat(user2);
 	})
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name2'),
 			},
 		},
 	})
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name1'),
 			},
@@ -100,67 +147,37 @@ class TestService {
 		@Params('name3') name3: string
 	): any {}
 
-	@Get({
+	@Req({
 		request: {
-			url: '/test/articles',
+			method: 'GET',
+			url: '/articles',
 			params: {
 				author: Symbol.for('userID'),
 			},
 			wait: true,
 		},
 	})
-	@Get({
+	@Req({
 		request: {
-			url: '/test/users',
+			method: 'GET',
+			url: '/users',
 			params: {
 				name: Symbol.for('name'),
 			},
 		},
 		response: {
-			transformers: (users) => users[0].id,
+			transformers: (users) => Number(users[0].id),
 			key: 'userID',
 		},
 	})
 	static getArticlesFromUser(@Params('name') name: string): any {}
 }
 
-class HttpClient {
-	static get(url: string, parmas?: { [prop: string]: any }, headers?: { [prop: string]: any }) {
-		let data = '';
-
-		const req = https.get({
-			hostname: '61489642035b3600175b9f58.mockapi.io',
-			port: 443,
-			path: url + `?${new URLSearchParams(parmas).toString()}`,
-			method: 'GET',
-			headers,
-		});
-
-		req.on('error', (error) => {
-			console.error(error);
-		});
-
-		req.end();
-
-		return new Promise((resolve, reject) => {
-			req.on('response', (res) => {
-				res.on('data', (chunk) => (data += chunk));
-
-				res.on('end', () => {
-					resolve(JSON.parse(data));
-				});
-
-				res.on('error', (e) => reject(e));
-			});
-		});
-	}
-}
-
 beforeAll(() => {
 	useHttpClient(HttpClient);
 });
 
-describe('GET Request', () => {
+describe('GET Request With Req Decorator', () => {
 	test('response', () => {
 		return TestService.getUsers().then((res: any) => {
 			expect(res).toHaveLength(50);
@@ -168,12 +185,12 @@ describe('GET Request', () => {
 	});
 
 	test('request params', () => {
-		return TestService.getUserFromName('Bethany Johns').then((res: any) => {
+		return TestService.getUserFromName('Tony Farrell').then((res: any) => {
 			expect(res).toEqual([
 				{
-					createdAt: '2021-10-28T04:10:26.100Z',
-					name: 'Bethany Johns',
-					avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
+					createdAt: '2021-12-01T07:27:02.218Z',
+					name: 'Tony Farrell',
+					avatar: 'https://cdn.fakercloud.com/avatars/klefue_128.jpg',
 					id: '1',
 				},
 			]);
@@ -181,43 +198,43 @@ describe('GET Request', () => {
 	});
 
 	test('merge', () => {
-		return TestService.getUsersFrom2Names('Bethany Johns', 'Renee Gleichner').then((res: any) => {
+		return TestService.getUsersFrom2Names('Hector Cormier', 'Clayton Medhurst').then((res: any) => {
 			expect(res).toEqual([
 				{
-					createdAt: '2021-10-28T04:10:26.100Z',
-					name: 'Bethany Johns',
-					avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
-					id: '1',
+					createdAt: '2021-12-01T19:51:10.700Z',
+					name: 'Hector Cormier',
+					avatar: 'https://cdn.fakercloud.com/avatars/hjartstrorn_128.jpg',
+					id: '2',
 				},
 				{
-					createdAt: '2021-10-28T08:28:49.712Z',
-					name: 'Renee Gleichner',
-					avatar: 'https://cdn.fakercloud.com/avatars/pcridesagain_128.jpg',
-					id: '2',
+					createdAt: '2021-12-01T17:40:41.302Z',
+					name: 'Clayton Medhurst',
+					avatar: 'https://cdn.fakercloud.com/avatars/timothycd_128.jpg',
+					id: '3',
 				},
 			]);
 		});
 	});
 
 	test('merge scope', () => {
-		return TestService.getUsersFrom3Names('Bethany Johns', 'Renee Gleichner', 'Wilfred Adams').then((res: any) => {
+		return TestService.getUsersFrom3Names('Tony Farrell', 'Hector Cormier', 'Clayton Medhurst').then((res: any) => {
 			expect(res).toEqual([
 				{
-					createdAt: '2021-10-28T04:10:26.100Z',
-					name: 'Bethany Johns',
-					avatar: 'https://cdn.fakercloud.com/avatars/uberschizo_128.jpg',
+					createdAt: '2021-12-01T07:27:02.218Z',
+					name: 'Tony Farrell',
+					avatar: 'https://cdn.fakercloud.com/avatars/klefue_128.jpg',
 					id: '1',
 				},
 				{
-					createdAt: '2021-10-28T08:28:49.712Z',
-					name: 'Renee Gleichner',
-					avatar: 'https://cdn.fakercloud.com/avatars/pcridesagain_128.jpg',
+					createdAt: '2021-12-01T19:51:10.700Z',
+					name: 'Hector Cormier',
+					avatar: 'https://cdn.fakercloud.com/avatars/hjartstrorn_128.jpg',
 					id: '2',
 				},
 				{
-					createdAt: '2021-10-28T21:31:57.354Z',
-					name: 'Wilfred Adams',
-					avatar: 'https://cdn.fakercloud.com/avatars/robergd_128.jpg',
+					createdAt: '2021-12-01T17:40:41.302Z',
+					name: 'Clayton Medhurst',
+					avatar: 'https://cdn.fakercloud.com/avatars/timothycd_128.jpg',
 					id: '3',
 				},
 			]);
@@ -225,13 +242,13 @@ describe('GET Request', () => {
 	});
 
 	test('wait', () => {
-		return TestService.getArticlesFromUser('Gordon Heller').then((res: any) => {
+		return TestService.getArticlesFromUser('Tony Farrell').then((res: any) => {
 			expect(res).toEqual([
 				{
-					createdAt: '2021-10-28T04:03:36.008Z',
-					title: 'Chief Operations Planner',
-					author: 36,
-					id: '2',
+					createdAt: '2021-12-01T17:17:21.048Z',
+					title: 'Global Program Associate',
+					author: 1,
+					id: '11',
 				},
 			]);
 		});
@@ -245,7 +262,38 @@ describe('GET Request', () => {
 
 	test('catch', () => {
 		return TestService.getUsersWithWrongURL().then((res: any) => {
-			expect(res).toBe('Not found')
+			expect(res).toBe(404);
+		});
+	});
+});
+
+describe('Get Request With Get Decorator', () => {
+	test('response', () => {
+		return TestService.getUsersWithGetDecorator().then((res: any) => {
+			expect(res).toHaveLength(50);
+		});
+	});
+});
+
+describe('Post Request With Post Decorator', () => {
+	test('create user', () => {
+		return TestService.createUser().then((res: any) => {
+			expect(res).toHaveLength(51);
 		})
 	})
-});
+})
+
+describe('Anonymous Request With Req Decorator', () => {
+	test('reuse other service', () => {
+		TestService.getUserFromService('Tony Farrell').then((res: any) => {
+			expect(res).toEqual([
+				{
+					createdAt: '2021-12-01T07:27:02.218Z',
+					name: 'Tony Farrell',
+					avatar: 'https://cdn.fakercloud.com/avatars/klefue_128.jpg',
+					id: '1',
+				},
+			]);
+		});
+	})
+})

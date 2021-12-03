@@ -47,4 +47,6 @@ function assertIsDefined<T>(val: T, msg?: string): asserts val is NonNullable<T>
   }
 }
 
-export { arrayFrom, runAll, mergeArray, runOnce, skipFirstRun, isNotEmptyObject, assertIsDefined };
+function assertIsSpecifiedType<T>(val: any): asserts val is T {}
+
+export { arrayFrom, runAll, mergeArray, runOnce, skipFirstRun, isNotEmptyObject, assertIsDefined, assertIsSpecifiedType };

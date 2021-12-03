@@ -1,14 +1,14 @@
 Arguments: 
-  /Users/wylc/.volta/tools/image/node/14.18.0/bin/node /Users/wylc/.volta/tools/image/yarn/1.22.15/bin/yarn.js add immer
+  /Users/wylc/.volta/tools/image/node/10.24.0/bin/node /Users/wylc/.volta/tools/image/yarn/1.22.15/bin/yarn.js add --dev ts-deep-pick
 
 PATH: 
-  /Users/wylc/.volta/tools/image/yarn/1.22.15/bin:/Users/wylc/.volta/tools/image/node/14.18.0/bin:/Users/wylc/.rvm/gems/ruby-2.6.5/bin:/Users/wylc/.rvm/gems/ruby-2.6.5@global/bin:/Users/wylc/.rvm/rubies/ruby-2.6.5/bin:/Users/wylc/.volta/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/wylc/.rvm/bin
+  /Users/wylc/.volta/tools/image/yarn/1.22.15/bin:/Users/wylc/.volta/tools/image/node/10.24.0/bin:/Users/wylc/.rvm/gems/ruby-2.6.5/bin:/Users/wylc/.rvm/gems/ruby-2.6.5@global/bin:/Users/wylc/.rvm/rubies/ruby-2.6.5/bin:/Users/wylc/.volta/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/wylc/.rvm/bin
 
 Yarn version: 
   1.22.15
 
 Node version: 
-  14.18.0
+  10.24.0
 
 Platform: 
   darwin x64
@@ -30,6 +30,7 @@ npm manifest:
   	},
   	"dependencies": {
   		"@types/lodash.mergewith": "^4.6.6",
+  		"immer": "^9.0.6",
   		"joi": "^17.4.2",
   		"just-curry-it": "^3.2.1",
   		"lodash.mergewith": "^4.6.2",
@@ -1341,6 +1342,11 @@ Lockfile:
     integrity sha1-ICK0sl+93CHS9SSXSkdKr+czkIs=
     dependencies:
       safer-buffer ">= 2.1.2 < 3"
+  
+  immer@^9.0.6:
+    version "9.0.6"
+    resolved "https://registry.npmjs.org/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
+    integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
   
   import-local@^3.0.2:
     version "3.0.2"

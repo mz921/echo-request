@@ -302,6 +302,25 @@
   resolved "https://registry.npm.taobao.org/@bcoe/v8-coverage/download/@bcoe/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha1-daLotRy3WKdVPWgEpZMteqznXDk=
 
+"@cspotcode/source-map-consumer@0.8.0":
+  version "0.8.0"
+  resolved "http://npm.snowballfinance.com/@cspotcode%2fsource-map-consumer/-/source-map-consumer-0.8.0.tgz#33bf4b7b39c178821606f669bbc447a6a629786b"
+  integrity sha1-M79LeznBeIIWBvZpu8RHpqYpeGs=
+
+"@cspotcode/source-map-support@0.7.0":
+  version "0.7.0"
+  resolved "http://npm.snowballfinance.com/@cspotcode%2fsource-map-support/-/source-map-support-0.7.0.tgz#4789840aa859e46d2f3173727ab707c66bf344f5"
+  integrity sha1-R4mECqhZ5G0vMXNyercHxmvzRPU=
+  dependencies:
+    "@cspotcode/source-map-consumer" "0.8.0"
+
+"@fastify/ajv-compiler@^1.0.0":
+  version "1.1.0"
+  resolved "http://npm.snowballfinance.com/@fastify%2fajv-compiler/-/ajv-compiler-1.1.0.tgz#5ce80b1fc8bebffc8c5ba428d5e392d0f9ed10a1"
+  integrity sha1-XOgLH8i+v/yMW6Qo1eOS0PntEKE=
+  dependencies:
+    ajv "^6.12.6"
+
 "@hapi/hoek@^9.0.0":
   version "9.2.0"
   resolved "http://npm.snowballfinance.com/@hapi%2fhoek/-/hoek-9.2.0.tgz#f3933a44e365864f4dad5db94158106d511e8131"
@@ -535,6 +554,26 @@
   resolved "https://registry.npm.taobao.org/@tootallnate/once/download/@tootallnate/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha1-zLkURTYBeaBOf+av94wA/8Hur4I=
 
+"@tsconfig/node10@^1.0.7":
+  version "1.0.8"
+  resolved "http://npm.snowballfinance.com/@tsconfig%2fnode10/-/node10-1.0.8.tgz#c1e4e80d6f964fbecb3359c43bd48b40f7cadad9"
+  integrity sha1-weToDW+WT77LM1nEO9SLQPfK2tk=
+
+"@tsconfig/node12@^1.0.7":
+  version "1.0.9"
+  resolved "http://npm.snowballfinance.com/@tsconfig%2fnode12/-/node12-1.0.9.tgz#62c1f6dee2ebd9aead80dc3afa56810e58e1a04c"
+  integrity sha1-YsH23uLr2a6tgNw6+laBDljhoEw=
+
+"@tsconfig/node14@^1.0.0":
+  version "1.0.1"
+  resolved "http://npm.snowballfinance.com/@tsconfig%2fnode14/-/node14-1.0.1.tgz#95f2d167ffb9b8d2068b0b235302fafd4df711f2"
+  integrity sha1-lfLRZ/+5uNIGiwsjUwL6/U33EfI=
+
+"@tsconfig/node16@^1.0.2":
+  version "1.0.2"
+  resolved "http://npm.snowballfinance.com/@tsconfig%2fnode16/-/node16-1.0.2.tgz#423c77877d0569db20e1fc80885ac4118314010e"
+  integrity sha1-Qjx3h30Fadsg4fyAiFrEEYMUAQ4=
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.14":
   version "7.1.16"
   resolved "https://registry.nlark.com/@types/babel__core/download/@types/babel__core-7.1.16.tgz#bc12c74b7d65e82d29876b5d0baf5c625ac58702"
@@ -646,6 +685,11 @@ abab@^2.0.3, abab@^2.0.5:
   resolved "https://registry.nlark.com/abab/download/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"
   integrity sha1-wLZ4+zLWD8EhnHhNaoJv44Wut5o=
 
+abstract-logging@^2.0.0:
+  version "2.0.1"
+  resolved "http://npm.snowballfinance.com/abstract-logging/-/abstract-logging-2.0.1.tgz#6b0c371df212db7129b57d2e7fcf282b8bf1c839"
+  integrity sha1-aww3HfIS23EptX0uf88oK4vxyDk=
+
 acorn-globals@^6.0.0:
   version "6.0.0"
   resolved "https://registry.nlark.com/acorn-globals/download/acorn-globals-6.0.0.tgz#46cdd39f0f8ff08a876619b55f5ac8a6dc770b45"
@@ -659,6 +703,11 @@ acorn-walk@^7.1.1:
   resolved "https://registry.nlark.com/acorn-walk/download/acorn-walk-7.2.0.tgz?cache=0&sync_timestamp=1630916608758&other_urls=https%3A%2F%2Fregistry.nlark.com%2Facorn-walk%2Fdownload%2Facorn-walk-7.2.0.tgz#0de889a601203909b0fbe07b8938dc21d2e967bc"
   integrity sha1-DeiJpgEgOQmw++B7iTjcIdLpZ7w=
 
+acorn-walk@^8.1.1:
+  version "8.2.0"
+  resolved "http://npm.snowballfinance.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
+  integrity sha1-dBIQ8uJCZFRQiFOi9E0KuDt/acE=
+
 acorn@^7.1.1:
   version "7.4.1"
   resolved "https://registry.nlark.com/acorn/download/acorn-7.4.1.tgz?cache=0&sync_timestamp=1630916608300&other_urls=https%3A%2F%2Fregistry.nlark.com%2Facorn%2Fdownload%2Facorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
@@ -669,12 +718,37 @@ acorn@^8.2.4:
   resolved "https://registry.nlark.com/acorn/download/acorn-8.5.0.tgz?cache=0&sync_timestamp=1630916608300&other_urls=https%3A%2F%2Fregistry.nlark.com%2Facorn%2Fdownload%2Facorn-8.5.0.tgz#4512ccb99b3698c752591e9bb4472e38ad43cee2"
   integrity sha1-RRLMuZs2mMdSWR6btEcuOK1DzuI=
 
+acorn@^8.4.1:
+  version "8.6.0"
+  resolved "http://npm.snowballfinance.com/acorn/-/acorn-8.6.0.tgz#e3692ba0eb1a0c83eaa4f37f5fa7368dd7142895"
+  integrity sha1-42kroOsaDIPqpPN/X6c2jdcUKJU=
+
 agent-base@6:
   version "6.0.2"
   resolved "https://registry.npm.taobao.org/agent-base/download/agent-base-6.0.2.tgz#49fff58577cfee3f37176feab4c22e00f86d7f77"
   integrity sha1-Sf/1hXfP7j83F2/qtMIuAPhtf3c=
   dependencies:
     debug "4"
+
+ajv@^6.11.0, ajv@^6.12.6:
+  version "6.12.6"
+  resolved "http://npm.snowballfinance.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
+  integrity sha1-uvWmLoArB9l3A0WG+MO69a3ybfQ=
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    fast-json-stable-stringify "^2.0.0"
+    json-schema-traverse "^0.4.1"
+    uri-js "^4.2.2"
+
+ajv@^8.1.0:
+  version "8.8.2"
+  resolved "http://npm.snowballfinance.com/ajv/-/ajv-8.8.2.tgz#01b4fef2007a28bf75f0b7fc009f62679de4abbb"
+  integrity sha1-AbT+8gB6KL918Lf8AJ9iZ53kq7s=
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
 
 ansi-escapes@^4.2.1:
   version "4.3.2"
@@ -715,6 +789,16 @@ anymatch@^3.0.3:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
+archy@^1.0.0:
+  version "1.0.0"
+  resolved "http://npm.snowballfinance.com/archy/-/archy-1.0.0.tgz#f9c8c13757cc1dd7bc379ac77b2c62a5c2868c40"
+  integrity sha1-+cjBN1fMHde8N5rHeyxipcKGjEA=
+
+arg@^4.1.0:
+  version "4.1.3"
+  resolved "http://npm.snowballfinance.com/arg/-/arg-4.1.3.tgz#269fc7ad5b8e42cb63c896d5666017261c144089"
+  integrity sha1-Jp/HrVuOQstjyJbVZmAXJhwUQIk=
+
 argparse@^1.0.7:
   version "1.0.10"
   resolved "https://registry.nlark.com/argparse/download/argparse-1.0.10.tgz#bcd6791ea5ae09725e17e5ad988134cd40b3d911"
@@ -726,6 +810,21 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.npm.taobao.org/asynckit/download/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
+
+atomic-sleep@^1.0.0:
+  version "1.0.0"
+  resolved "http://npm.snowballfinance.com/atomic-sleep/-/atomic-sleep-1.0.0.tgz#eb85b77a601fc932cfe432c5acd364a9e2c9075b"
+  integrity sha1-64W3emAfyTLP5DLFrNNkqeLJB1s=
+
+avvio@^7.1.2:
+  version "7.2.2"
+  resolved "http://npm.snowballfinance.com/avvio/-/avvio-7.2.2.tgz#58e00e7968870026cd7b7d4f689d596db629e251"
+  integrity sha1-WOAOeWiHACbNe31PaJ1ZbbYp4lE=
+  dependencies:
+    archy "^1.0.0"
+    debug "^4.0.0"
+    fastq "^1.6.1"
+    queue-microtask "^1.1.2"
 
 babel-jest@^27.2.1:
   version "27.2.1"
@@ -962,6 +1061,16 @@ convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
   dependencies:
     safe-buffer "~5.1.1"
 
+cookie@^0.4.0:
+  version "0.4.1"
+  resolved "http://npm.snowballfinance.com/cookie/-/cookie-0.4.1.tgz#afd713fe26ebd21ba95ceb61f9a8116e50a537d1"
+  integrity sha1-r9cT/ibr0hupXOth+agRblClN9E=
+
+create-require@^1.1.0:
+  version "1.1.1"
+  resolved "http://npm.snowballfinance.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
+  integrity sha1-wdfo8eX2z8n/ZfnNNS03NIdWwzM=
+
 cross-spawn@^7.0.3:
   version "7.0.3"
   resolved "https://registry.npm.taobao.org/cross-spawn/download/cross-spawn-7.0.3.tgz#f73a85b9d5d41d045551c177e2882d4ac85728a6"
@@ -1004,6 +1113,13 @@ debug@4, debug@^4.1.0, debug@^4.1.1:
   dependencies:
     ms "2.1.2"
 
+debug@^4.0.0:
+  version "4.3.3"
+  resolved "http://npm.snowballfinance.com/debug/-/debug-4.3.3.tgz#04266e0b70a98d4462e6e288e38259213332b664"
+  integrity sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==
+  dependencies:
+    ms "2.1.2"
+
 decimal.js@^10.2.1:
   version "10.3.1"
   resolved "https://registry.nlark.com/decimal.js/download/decimal.js-10.3.1.tgz#d8c3a444a9c6774ba60ca6ad7261c3a94fd5e783"
@@ -1021,7 +1137,7 @@ deep-is@~0.1.3:
 
 deepmerge@^4.2.2:
   version "4.2.2"
-  resolved "https://registry.nlark.com/deepmerge/download/deepmerge-4.2.2.tgz#44d2ea3679b8f4d4ffba33f03d865fc1e7bf4955"
+  resolved "http://npm.snowballfinance.com/deepmerge/-/deepmerge-4.2.2.tgz#44d2ea3679b8f4d4ffba33f03d865fc1e7bf4955"
   integrity sha1-RNLqNnm49NT/ujPwPYZfwee/SVU=
 
 delayed-stream@~1.0.0:
@@ -1038,6 +1154,11 @@ diff-sequences@^27.0.6:
   version "27.0.6"
   resolved "https://registry.nlark.com/diff-sequences/download/diff-sequences-27.0.6.tgz#3305cb2e55a033924054695cc66019fd7f8e5723"
   integrity sha1-MwXLLlWgM5JAVGlcxmAZ/X+OVyM=
+
+diff@^4.0.1:
+  version "4.0.2"
+  resolved "http://npm.snowballfinance.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
+  integrity sha1-YPOuy4nV+uUgwRqhnvwruYKq3n0=
 
 domexception@^2.0.1:
   version "2.0.1"
@@ -1135,15 +1256,90 @@ expect@^27.2.1:
     jest-message-util "^27.2.0"
     jest-regex-util "^27.0.6"
 
+fast-decode-uri-component@^1.0.1:
+  version "1.0.1"
+  resolved "http://npm.snowballfinance.com/fast-decode-uri-component/-/fast-decode-uri-component-1.0.1.tgz#46f8b6c22b30ff7a81357d4f59abfae938202543"
+  integrity sha1-Rvi2wisw/3qBNX1PWav66TggJUM=
+
+fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
+  version "3.1.3"
+  resolved "http://npm.snowballfinance.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
+  integrity sha1-On1WtVnWy8PrUSMlJE5hmmXGxSU=
+
 fast-json-stable-stringify@2.x, fast-json-stable-stringify@^2.0.0:
   version "2.1.0"
   resolved "https://registry.nlark.com/fast-json-stable-stringify/download/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
   integrity sha1-h0v2nG9ATCtdmcSBNBOZ/VWJJjM=
 
+fast-json-stringify@^2.5.2:
+  version "2.7.12"
+  resolved "http://npm.snowballfinance.com/fast-json-stringify/-/fast-json-stringify-2.7.12.tgz#5bb7941695b52f545191bc396396230633f43592"
+  integrity sha1-W7eUFpW1L1RRkbw5Y5YjBjP0NZI=
+  dependencies:
+    ajv "^6.11.0"
+    deepmerge "^4.2.2"
+    rfdc "^1.2.0"
+    string-similarity "^4.0.1"
+
 fast-levenshtein@~2.0.6:
   version "2.0.6"
   resolved "https://registry.nlark.com/fast-levenshtein/download/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
+
+fast-redact@^3.0.0:
+  version "3.0.2"
+  resolved "http://npm.snowballfinance.com/fast-redact/-/fast-redact-3.0.2.tgz#c940ba7162dde3aeeefc522926ae8c5231412904"
+  integrity sha1-yUC6cWLd467u/FIpJq6MUjFBKQQ=
+
+fast-safe-stringify@^2.0.8:
+  version "2.1.1"
+  resolved "http://npm.snowballfinance.com/fast-safe-stringify/-/fast-safe-stringify-2.1.1.tgz#c406a83b6e70d9e35ce3b30a81141df30aeba884"
+  integrity sha1-xAaoO25w2eNc47MKgRQd8wrrqIQ=
+
+fastify-crud-generator@^1.0.0:
+  version "1.0.0"
+  resolved "http://npm.snowballfinance.com/fastify-crud-generator/-/fastify-crud-generator-1.0.0.tgz#1b75d255d7667c62f4471fa5a84ee115e0b05888"
+  integrity sha1-G3XSVddmfGL0Rx+lqE7hFeCwWIg=
+  dependencies:
+    fastify-error "^0.3.1"
+
+fastify-error@^0.3.0, fastify-error@^0.3.1:
+  version "0.3.1"
+  resolved "http://npm.snowballfinance.com/fastify-error/-/fastify-error-0.3.1.tgz#8eb993e15e3cf57f0357fc452af9290f1c1278d2"
+  integrity sha1-jrmT4V489X8DV/xFKvkpDxwSeNI=
+
+fastify-warning@^0.2.0:
+  version "0.2.0"
+  resolved "http://npm.snowballfinance.com/fastify-warning/-/fastify-warning-0.2.0.tgz#e717776026a4493dc9a2befa44db6d17f618008f"
+  integrity sha1-5xd3YCakST3Jor76RNttF/YYAI8=
+
+fastify@^3.24.1:
+  version "3.24.1"
+  resolved "http://npm.snowballfinance.com/fastify/-/fastify-3.24.1.tgz#979d34e096f40b7a90e90733efbbdae81623034e"
+  integrity sha512-ZL0V6u37d65tAY8lMwVMFtFvnEeJcG80QBNSdChqCm4i4x+is/38OU14gzJuRXhpenTL+pTJzNcu5Kn1ouzM3Q==
+  dependencies:
+    "@fastify/ajv-compiler" "^1.0.0"
+    abstract-logging "^2.0.0"
+    avvio "^7.1.2"
+    fast-json-stringify "^2.5.2"
+    fastify-error "^0.3.0"
+    fastify-warning "^0.2.0"
+    find-my-way "^4.1.0"
+    flatstr "^1.0.12"
+    light-my-request "^4.2.0"
+    pino "^6.13.0"
+    proxy-addr "^2.0.7"
+    rfdc "^1.1.4"
+    secure-json-parse "^2.0.0"
+    semver "^7.3.2"
+    tiny-lru "^7.0.0"
+
+fastq@^1.6.1:
+  version "1.13.0"
+  resolved "http://npm.snowballfinance.com/fastq/-/fastq-1.13.0.tgz#616760f88a7526bdfc596b7cab8c18938c36b98c"
+  integrity sha1-YWdg+Ip1Jr38WWt8q4wYk4w2uYw=
+  dependencies:
+    reusify "^1.0.4"
 
 fb-watchman@^2.0.0:
   version "2.0.1"
@@ -1159,6 +1355,16 @@ fill-range@^7.0.1:
   dependencies:
     to-regex-range "^5.0.1"
 
+find-my-way@^4.1.0:
+  version "4.4.0"
+  resolved "http://npm.snowballfinance.com/find-my-way/-/find-my-way-4.4.0.tgz#e4a115031d1c5c538d028d06b666e2174462bc07"
+  integrity sha1-5KEVAx0cXFONAo0GtmbiF0RivAc=
+  dependencies:
+    fast-decode-uri-component "^1.0.1"
+    fast-deep-equal "^3.1.3"
+    safe-regex2 "^2.0.0"
+    semver-store "^0.3.0"
+
 find-up@^4.0.0, find-up@^4.1.0:
   version "4.1.0"
   resolved "https://registry.nlark.com/find-up/download/find-up-4.1.0.tgz?cache=0&sync_timestamp=1629976988340&other_urls=https%3A%2F%2Fregistry.nlark.com%2Ffind-up%2Fdownload%2Ffind-up-4.1.0.tgz#97afe7d6cdc0bc5928584b7c8d7b16e8a9aa5d19"
@@ -1166,6 +1372,11 @@ find-up@^4.0.0, find-up@^4.1.0:
   dependencies:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
+
+flatstr@^1.0.12:
+  version "1.0.12"
+  resolved "http://npm.snowballfinance.com/flatstr/-/flatstr-1.0.12.tgz#c2ba6a08173edbb6c9640e3055b95e287ceb5931"
+  integrity sha1-wrpqCBc+27bJZA4wVbleKHzrWTE=
 
 form-data@^3.0.0:
   version "3.0.1"
@@ -1175,6 +1386,11 @@ form-data@^3.0.0:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
+
+forwarded@0.2.0:
+  version "0.2.0"
+  resolved "http://npm.snowballfinance.com/forwarded/-/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
+  integrity sha1-ImmTZCiq1MFcfr6XeahL8LKoGBE=
 
 fs.realpath@^1.0.0:
   version "1.0.0"
@@ -1321,6 +1537,11 @@ inherits@2:
   version "2.0.4"
   resolved "https://registry.nlark.com/inherits/download/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha1-D6LGT5MpF8NDOg3tVTY6rjdBa3w=
+
+ipaddr.js@1.9.1:
+  version "1.9.1"
+  resolved "http://npm.snowballfinance.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
+  integrity sha1-v/OFQ+64mEglB5/zoqjmy9RngbM=
 
 is-ci@^3.0.0:
   version "3.0.0"
@@ -1885,6 +2106,16 @@ jsesc@^2.5.1:
   resolved "https://registry.npm.taobao.org/jsesc/download/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
   integrity sha1-gFZNLkg9rPbo7yCWUKZ98/DCg6Q=
 
+json-schema-traverse@^0.4.1:
+  version "0.4.1"
+  resolved "http://npm.snowballfinance.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
+  integrity sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==
+
+json-schema-traverse@^1.0.0:
+  version "1.0.0"
+  resolved "http://npm.snowballfinance.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
+  integrity sha1-rnvLNlard6c7pcSb9lTzjmtoYOI=
+
 json5@2.x, json5@^2.1.2:
   version "2.2.0"
   resolved "https://registry.nlark.com/json5/download/json5-2.2.0.tgz#2dfefe720c6ba525d9ebd909950f0515316c89a3"
@@ -1914,6 +2145,16 @@ levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+light-my-request@^4.2.0:
+  version "4.7.0"
+  resolved "http://npm.snowballfinance.com/light-my-request/-/light-my-request-4.7.0.tgz#5bacd17fa0eaf96fe5eed1682c5e0d361953cf46"
+  integrity sha512-LTa8YZp3K2AUpqUnwwKajoIHcsKOBnzwJNQSrk7unziPwo6CjOYjyO0F9wfkxFvP+nBsCGe3eMPnedVgIIgdAw==
+  dependencies:
+    ajv "^8.1.0"
+    cookie "^0.4.0"
+    fastify-warning "^0.2.0"
+    set-cookie-parser "^2.4.1"
 
 locate-path@^5.0.0:
   version "5.0.0"
@@ -1946,7 +2187,7 @@ make-dir@^3.0.0:
   dependencies:
     semver "^6.0.0"
 
-make-error@1.x:
+make-error@1.x, make-error@^1.1.1:
   version "1.3.6"
   resolved "https://registry.npm.taobao.org/make-error/download/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha1-LrLjfqm2fEiR9oShOUeZr0hM96I=
@@ -2122,6 +2363,24 @@ picomatch@^2.0.4, picomatch@^2.2.3:
   resolved "https://registry.nlark.com/picomatch/download/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
   integrity sha1-8fBh3o9qS/AiiS4tEoI0+5gwKXI=
 
+pino-std-serializers@^3.1.0:
+  version "3.2.0"
+  resolved "http://npm.snowballfinance.com/pino-std-serializers/-/pino-std-serializers-3.2.0.tgz#b56487c402d882eb96cd67c257868016b61ad671"
+  integrity sha1-tWSHxALYguuWzWfCV4aAFrYa1nE=
+
+pino@^6.13.0:
+  version "6.13.3"
+  resolved "http://npm.snowballfinance.com/pino/-/pino-6.13.3.tgz#60b93bcda1541f92fb37b3f2be0a25cf1d05b6fe"
+  integrity sha1-YLk7zaFUH5L7N7Pyvgolzx0Ftv4=
+  dependencies:
+    fast-redact "^3.0.0"
+    fast-safe-stringify "^2.0.8"
+    fastify-warning "^0.2.0"
+    flatstr "^1.0.12"
+    pino-std-serializers "^3.1.0"
+    quick-format-unescaped "^4.0.3"
+    sonic-boom "^1.0.2"
+
 pirates@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npm.taobao.org/pirates/download/pirates-4.0.1.tgz#643a92caf894566f91b2b986d2c66950a8e2fb87"
@@ -2159,15 +2418,33 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
+proxy-addr@^2.0.7:
+  version "2.0.7"
+  resolved "http://npm.snowballfinance.com/proxy-addr/-/proxy-addr-2.0.7.tgz#f19fe69ceab311eeb94b42e70e8c2070f9ba1025"
+  integrity sha1-8Z/mnOqzEe65S0LnDowgcPm6ECU=
+  dependencies:
+    forwarded "0.2.0"
+    ipaddr.js "1.9.1"
+
 psl@^1.1.33:
   version "1.8.0"
   resolved "https://registry.npm.taobao.org/psl/download/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
   integrity sha1-kyb4vPsBOtzABf3/BWrM4CDlHCQ=
 
-punycode@^2.1.1:
+punycode@^2.1.0, punycode@^2.1.1:
   version "2.1.1"
   resolved "https://registry.nlark.com/punycode/download/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha1-tYsBCsQMIsVldhbI0sLALHv0eew=
+
+queue-microtask@^1.1.2:
+  version "1.2.3"
+  resolved "http://npm.snowballfinance.com/queue-microtask/-/queue-microtask-1.2.3.tgz#4929228bbc724dfac43e0efb058caf7b6cfb6243"
+  integrity sha1-SSkii7xyTfrEPg77BYyve2z7YkM=
+
+quick-format-unescaped@^4.0.3:
+  version "4.0.4"
+  resolved "http://npm.snowballfinance.com/quick-format-unescaped/-/quick-format-unescaped-4.0.4.tgz#93ef6dd8d3453cbc7970dd614fad4c5954d6b5a7"
+  integrity sha1-k+9t2NNFPLx5cN1hT61MWVTWtac=
 
 react-is@^17.0.1:
   version "17.0.2"
@@ -2183,6 +2460,11 @@ require-directory@^2.1.1:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/require-directory/download/require-directory-2.1.1.tgz#8c64ad5fd30dab1c976e2344ffe7f792a6a6df42"
   integrity sha1-jGStX9MNqxyXbiNE/+f3kqam30I=
+
+require-from-string@^2.0.2:
+  version "2.0.2"
+  resolved "http://npm.snowballfinance.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
+  integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
 
 resolve-cwd@^3.0.0:
   version "3.0.0"
@@ -2204,6 +2486,21 @@ resolve@^1.20.0:
     is-core-module "^2.2.0"
     path-parse "^1.0.6"
 
+ret@~0.2.0:
+  version "0.2.2"
+  resolved "http://npm.snowballfinance.com/ret/-/ret-0.2.2.tgz#b6861782a1f4762dce43402a71eb7a283f44573c"
+  integrity sha512-M0b3YWQs7R3Z917WRQy1HHA7Ba7D8hvZg6UE5mLykJxQVE2ju0IXbGlaHPPlkY+WN7wFP+wUMXmBFA0aV6vYGQ==
+
+reusify@^1.0.4:
+  version "1.0.4"
+  resolved "http://npm.snowballfinance.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
+  integrity sha1-kNo4Kx4SbvwCFG6QhFqI2xKSXXY=
+
+rfdc@^1.1.4, rfdc@^1.2.0:
+  version "1.3.0"
+  resolved "http://npm.snowballfinance.com/rfdc/-/rfdc-1.3.0.tgz#d0b7c441ab2720d05dc4cf26e01c89631d9da08b"
+  integrity sha1-0LfEQasnINBdxM8m4ByJYx2doIs=
+
 rimraf@^3.0.0:
   version "3.0.2"
   resolved "https://registry.nlark.com/rimraf/download/rimraf-3.0.2.tgz?cache=0&sync_timestamp=1618847144341&other_urls=https%3A%2F%2Fregistry.nlark.com%2Frimraf%2Fdownload%2Frimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
@@ -2215,6 +2512,13 @@ safe-buffer@~5.1.1:
   version "5.1.2"
   resolved "https://registry.npm.taobao.org/safe-buffer/download/safe-buffer-5.1.2.tgz?cache=0&sync_timestamp=1598277415399&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsafe-buffer%2Fdownload%2Fsafe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
   integrity sha1-mR7GnSluAxN0fVm9/St0XDX4go0=
+
+safe-regex2@^2.0.0:
+  version "2.0.0"
+  resolved "http://npm.snowballfinance.com/safe-regex2/-/safe-regex2-2.0.0.tgz#b287524c397c7a2994470367e0185e1916b1f5b9"
+  integrity sha1-sodSTDl8eimURwNn4BheGRax9bk=
+  dependencies:
+    ret "~0.2.0"
 
 "safer-buffer@>= 2.1.2 < 3":
   version "2.1.2"
@@ -2233,6 +2537,16 @@ scoped-singleton-decorator@^1.0.3:
   resolved "https://registry.npmjs.org/scoped-singleton-decorator/-/scoped-singleton-decorator-1.0.3.tgz#f03f68121bff5af81d622016382f815625916cfb"
   integrity sha512-REnCWGKbAWCZLXHMlVnPWlVsiBv0B4EL7+wc5hu3B4lFAYRi53rXwfcU4MdeRSmdSJFb/G6H+9UfXCTWxTOqUA==
 
+secure-json-parse@^2.0.0:
+  version "2.4.0"
+  resolved "http://npm.snowballfinance.com/secure-json-parse/-/secure-json-parse-2.4.0.tgz#5aaeaaef85c7a417f76271a4f5b0cc3315ddca85"
+  integrity sha1-Wq6q74XHpBf3YnGk9bDMMxXdyoU=
+
+semver-store@^0.3.0:
+  version "0.3.0"
+  resolved "http://npm.snowballfinance.com/semver-store/-/semver-store-0.3.0.tgz#ce602ff07df37080ec9f4fb40b29576547befbe9"
+  integrity sha1-zmAv8H3zcIDsn0+0CylXZUe+++k=
+
 semver@7.x, semver@^7.3.2:
   version "7.3.5"
   resolved "https://registry.nlark.com/semver/download/semver-7.3.5.tgz#0b621c879348d8998e4b0e4be94b3f12e6018ef7"
@@ -2244,6 +2558,11 @@ semver@^6.0.0, semver@^6.3.0:
   version "6.3.0"
   resolved "https://registry.nlark.com/semver/download/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
   integrity sha1-7gpkyK9ejO6mdoexM3YeG+y9HT0=
+
+set-cookie-parser@^2.4.1:
+  version "2.4.8"
+  resolved "http://npm.snowballfinance.com/set-cookie-parser/-/set-cookie-parser-2.4.8.tgz#d0da0ed388bc8f24e706a391f9c9e252a13c58b2"
+  integrity sha1-0NoO04i8jyTnBqOR+cniUqE8WLI=
 
 shebang-command@^2.0.0:
   version "2.0.0"
@@ -2271,6 +2590,14 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.nlark.com/slash/download/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha1-ZTm+hwwWWtvVJAIg2+Nh8bxNRjQ=
+
+sonic-boom@^1.0.2:
+  version "1.4.1"
+  resolved "http://npm.snowballfinance.com/sonic-boom/-/sonic-boom-1.4.1.tgz#d35d6a74076624f12e6f917ade7b9d75e918f53e"
+  integrity sha1-011qdAdmJPEub5F63nuddekY9T4=
+  dependencies:
+    atomic-sleep "^1.0.0"
+    flatstr "^1.0.12"
 
 source-map-support@^0.5.6:
   version "0.5.20"
@@ -2314,6 +2641,11 @@ string-length@^4.0.1:
   dependencies:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
+
+string-similarity@^4.0.1:
+  version "4.0.4"
+  resolved "http://npm.snowballfinance.com/string-similarity/-/string-similarity-4.0.4.tgz#42d01ab0b34660ea8a018da8f56a3309bb8b2a5b"
+  integrity sha1-QtAasLNGYOqKAY2o9WozCbuLKls=
 
 string-width@^4.1.0, string-width@^4.2.0:
   version "4.2.2"
@@ -2397,6 +2729,11 @@ throat@^6.0.1:
   resolved "https://registry.nlark.com/throat/download/throat-6.0.1.tgz#d514fedad95740c12c2d7fc70ea863eb51ade375"
   integrity sha1-1RT+2tlXQMEsLX/HDqhj61Gt43U=
 
+tiny-lru@^7.0.0:
+  version "7.0.6"
+  resolved "http://npm.snowballfinance.com/tiny-lru/-/tiny-lru-7.0.6.tgz#b0c3cdede1e5882aa2d1ae21cb2ceccf2a331f24"
+  integrity sha1-sMPN7eHliCqi0a4hyyzszyozHyQ=
+
 tmpl@1.0.x:
   version "1.0.5"
   resolved "https://registry.nlark.com/tmpl/download/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
@@ -2430,6 +2767,11 @@ tr46@^2.1.0:
   dependencies:
     punycode "^2.1.1"
 
+ts-essentials@^9.0.0:
+  version "9.0.0"
+  resolved "http://npm.snowballfinance.com/ts-essentials/-/ts-essentials-9.0.0.tgz#6196b7f390926429256c70951c8edd260e8e5097"
+  integrity sha1-YZa385CSZCklbHCVHI7dJg6OUJc=
+
 ts-jest@^27.0.5:
   version "27.0.5"
   resolved "https://registry.nlark.com/ts-jest/download/ts-jest-27.0.5.tgz#0b0604e2271167ec43c12a69770f0bb65ad1b750"
@@ -2443,6 +2785,24 @@ ts-jest@^27.0.5:
     make-error "1.x"
     semver "7.x"
     yargs-parser "20.x"
+
+ts-node@^10.4.0:
+  version "10.4.0"
+  resolved "http://npm.snowballfinance.com/ts-node/-/ts-node-10.4.0.tgz#680f88945885f4e6cf450e7f0d6223dd404895f7"
+  integrity sha1-aA+IlFiF9ObPRQ5/DWIj3UBIlfc=
+  dependencies:
+    "@cspotcode/source-map-support" "0.7.0"
+    "@tsconfig/node10" "^1.0.7"
+    "@tsconfig/node12" "^1.0.7"
+    "@tsconfig/node14" "^1.0.0"
+    "@tsconfig/node16" "^1.0.2"
+    acorn "^8.4.1"
+    acorn-walk "^8.1.1"
+    arg "^4.1.0"
+    create-require "^1.1.0"
+    diff "^4.0.1"
+    make-error "^1.1.1"
+    yn "3.1.1"
 
 type-check@~0.3.2:
   version "0.3.2"
@@ -2477,6 +2837,13 @@ universalify@^0.1.2:
   version "0.1.2"
   resolved "https://registry.npm.taobao.org/universalify/download/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha1-tkb2m+OULavOzJ1mOcgNwQXvqmY=
+
+uri-js@^4.2.2:
+  version "4.4.1"
+  resolved "http://npm.snowballfinance.com/uri-js/-/uri-js-4.4.1.tgz#9b1a52595225859e55f669d928f88c6c57f2a77e"
+  integrity sha1-mxpSWVIlhZ5V9mnZKPiMbFfyp34=
+  dependencies:
+    punycode "^2.1.0"
 
 v8-to-istanbul@^8.0.0:
   version "8.0.0"
@@ -2617,3 +2984,8 @@ yargs@^16.0.3:
     string-width "^4.2.0"
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
+
+yn@3.1.1:
+  version "3.1.1"
+  resolved "http://npm.snowballfinance.com/yn/-/yn-3.1.1.tgz#1e87401a09d767c1d5eab26a6e4c185182d2eb50"
+  integrity sha1-HodAGgnXZ8HV6rJqbkwYUYLS61A=
