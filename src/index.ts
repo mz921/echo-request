@@ -36,11 +36,13 @@ function Req(reqDecoratorConfig: RequestDecoratorConfig) {
 		const innerMethod = descriptor.value;
 		const requestMetadataManager = new RequestMetadataManager({}, target, propertyKey);
 
-		// push placeholders, since the merge decorator needs that to determine merged request counts.
 		_mergeWith(
 			requestMetadataManager.get(),
 			{
+				// push placeholders, since the merge decorator needs that to determine merged request counts.
 				placeholder: [1],
+				// push Get prop, since the mock decorator needs that to set mock data.
+				GET: (reqDecoratorConfig as any).request?.method === 'GET' ? [{url: (reqDecoratorConfig as any).request.url}] : []
 			},
 			mergeArray
 		);
@@ -73,10 +75,9 @@ function Req(reqDecoratorConfig: RequestDecoratorConfig) {
 				parameters,
 			});
 
+			// clear request metadata
 			if ((requestMetadataManager.get() as any).placeholder) {
-				requestMetadataManager.set((requestMetadata) => {
-					delete (requestMetadata as any)['placeholder'];
-				});
+				requestMetadataManager.set((requestMetadata) => ({}));
 			}
 
 			_mergeWith(
@@ -275,7 +276,7 @@ function Catch(catcher: Function) {
 
 		const request = descriptor.value;
 
-		descriptor.value = () => request().catch(catcher);
+		descriptor.value = (...parameters: any[]) => request(...parameters).catch(catcher);
 	};
 }
 

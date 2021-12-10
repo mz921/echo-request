@@ -82,7 +82,7 @@ function initRequest(reqDecoratorConfig: RequestDecoratorConfig, reqHostConfig: 
 
 		const resMockData = (mockMetadata as any)[propertyKey];
 
-		if (resMockData) r = () => Promise.resolve(resMockData.find(({ url: u }: { url: string }) => u === url));
+		if (resMockData) r = () => Promise.resolve(resMockData.find(({ url: u }: { url: string }) => u === url).mockData);
 		else {
 			if (method === 'GET') {
 				switch (signature) {

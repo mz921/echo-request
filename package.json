@@ -1,6 +1,6 @@
 {
 	"name": "eaco-request",
-	"version": "0.0.1",
+	"version": "0.1.2",
 	"description": "A declarative http request modeling and management library using decorator.",
 	"main": "dist/index.js",
 	"author": "mz921 <15694528183@163.com>",

@@ -1,5 +1,14 @@
-import { Req, Get, Post, useHttpClient, Params, Merge, Headers, Res, InjectRes, Catch } from '../src/index';
+import { Req, Get, Post, useHttpClient, Params, Merge, Headers, Res, InjectRes, Catch, Mock } from '../src/index';
 import HttpClient from './httpClient';
+
+process.env.NODE_ENV = 'development';
+
+const mockData = {
+	"mock-url": {
+		name: 'Paul',
+		age: 23
+	}
+}
 
 class TestService {
 	@Req({
@@ -21,14 +30,23 @@ class TestService {
 	})
 	static getUsersWithGetDecorator(): any {}
 
+	@Mock(mockData)
+	@Req({
+		request: {
+			method: 'GET',
+			url: 'mock-url'
+		}
+	})
+	static getMockUser(): any {}
+
 	@Get({
 		request: {
 			url: '/users',
 			headers: {},
 			key: 'getUsers',
-			wait: true
+			wait: true,
 		},
-	})	
+	})
 	@Post({
 		request: {
 			url: '/users',
@@ -37,7 +55,7 @@ class TestService {
 				name: 'james mcavoy',
 				avatar: 'https://cdn.fakercloud.com/avatars/pierre_nel_128.jpg',
 				id: '51',
-			},	
+			},
 		},
 	})
 	static createUser(): any {}
@@ -82,8 +100,8 @@ class TestService {
 	@Req({
 		request: {
 			send: TestService.getUserFromName,
-			sendArguments: [Symbol.for('name')]
-		}
+			sendArguments: [Symbol.for('name')],
+		},
 	})
 	static getUserFromService(@Params('name') name: string): any {}
 
@@ -265,6 +283,12 @@ describe('GET Request With Req Decorator', () => {
 			expect(res).toBe(404);
 		});
 	});
+
+	test.only('mock', () => {
+		return TestService.getMockUser().then((res: any) => {
+			expect(res).toEqual(mockData['mock-url'])
+		})
+	})
 });
 
 describe('Get Request With Get Decorator', () => {
@@ -279,9 +303,9 @@ describe('Post Request With Post Decorator', () => {
 	test('create user', () => {
 		return TestService.createUser().then((res: any) => {
 			expect(res).toHaveLength(51);
-		})
-	})
-})
+		});
+	});
+});
 
 describe('Anonymous Request With Req Decorator', () => {
 	test('reuse other service', () => {
@@ -295,5 +319,5 @@ describe('Anonymous Request With Req Decorator', () => {
 				},
 			]);
 		});
-	})
-})
+	});
+});
