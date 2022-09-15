@@ -3,7 +3,8 @@ import curry from 'just-curry-it';
 import _mergeWith from 'lodash.mergewith';
 import { mergeArray, skipFirstRun, isNotEmptyObject, assertIsDefined } from './utils';
 import {
-	HttpClientMetadataManager,
+	GlobalConfigMetadataManager,
+	ConfigMetadataManager,
 	InfoMetadataManager,
 	MergeMetadataManager,
 	MockMetadataManager,
@@ -12,23 +13,39 @@ import {
 	RequestMetadataManager,
 	ResponseMetadataManager,
 } from './metadata';
-import type {
-	HttpClient,
-	GetDecoratorConfig,
-	PostDecoratorConfig,
-	RequestDecoratorConfig,
-} from './types';
+import type { GlobalRequestConfig, GetDecoratorConfig, PostDecoratorConfig, RequestDecoratorConfig } from './types';
 import { initRequest } from './init';
 import { GlobalTarget } from './constants';
 import { DeepOmit } from 'ts-essentials';
 
-const httpClientMetadataManager = new HttpClientMetadataManager({}, GlobalTarget);
+const globalConfigMetadataManager = new GlobalConfigMetadataManager({}, GlobalTarget);
 
-function useHttpClient(httpClient: HttpClient, signature?: string) {
-	httpClientMetadataManager.replace({
-		httpClient,
-		signature: signature || 'position',
-	});
+function createRequestConfig(requestConfig: GlobalRequestConfig) {
+	if (!requestConfig.signature) requestConfig.signature = 'position';
+
+	globalConfigMetadataManager.replace(requestConfig);
+}
+
+function ReqConfig(requestConfig: Partial<GlobalRequestConfig>) {
+	return function (target: any, propertyKey: string) {
+		const configMetadataManager = new ConfigMetadataManager(requestConfig, target);
+
+		const mergedConfig = _mergeWith({}, globalConfigMetadataManager.get(), configMetadataManager.get());
+
+		if (!propertyKey) {
+			const NATIVE_PROPS = ['length', 'name', 'arguments', 'caller', 'prototype'];
+			Object.getOwnPropertyNames(target).forEach((prop) => {
+				if (NATIVE_PROPS.includes(prop)) return;
+				configMetadataManager.set((config: any) => {
+					config[prop] = mergedConfig;
+				});
+			});
+		} else {
+			configMetadataManager.set((config: any) => {
+				config[propertyKey] = mergedConfig;
+			});
+		}
+	};
 }
 
 function Req(reqDecoratorConfig: RequestDecoratorConfig) {
@@ -42,7 +59,10 @@ function Req(reqDecoratorConfig: RequestDecoratorConfig) {
 				// push placeholders, since the merge decorator needs that to determine merged request counts.
 				placeholder: [1],
 				// push Get prop, since the mock decorator needs that to set mock data.
-				GET: (reqDecoratorConfig as any).request?.method === 'GET' ? [{url: (reqDecoratorConfig as any).request.url}] : []
+				GET:
+					(reqDecoratorConfig as any).request?.method === 'GET'
+						? [{ url: (reqDecoratorConfig as any).request.url }]
+						: [],
 			},
 			mergeArray
 		);
@@ -128,28 +148,28 @@ function Req(reqDecoratorConfig: RequestDecoratorConfig) {
 	};
 }
 
-function Get(getDecoratorConfig: DeepOmit<GetDecoratorConfig, {request: {method: never}}>) {
+function Get(getDecoratorConfig: DeepOmit<GetDecoratorConfig, { request: { method: never } }>) {
 	return Req({
 		request: {
 			method: 'GET',
-			...getDecoratorConfig.request
+			...getDecoratorConfig.request,
 		},
 		response: {
-			...getDecoratorConfig.response
-		}
-	})
+			...getDecoratorConfig.response,
+		},
+	});
 }
 
-function Post(postDecoratorConfig: DeepOmit<PostDecoratorConfig, {request: {method: never}}>) {
+function Post(postDecoratorConfig: DeepOmit<PostDecoratorConfig, { request: { method: never } }>) {
 	return Req({
 		request: {
 			method: 'POST',
-			...postDecoratorConfig.request
+			...postDecoratorConfig.request,
 		},
 		response: {
-			...postDecoratorConfig.response
-		}
-	})
+			...postDecoratorConfig.response,
+		},
+	});
 }
 
 function Params(key: string, cb?: (param: any) => any) {
@@ -273,11 +293,10 @@ function Merge(merge: (...args: any[]) => any) {
 
 function Catch(catcher: Function) {
 	return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-
 		const request = descriptor.value;
 
 		descriptor.value = (...parameters: any[]) => request(...parameters).catch(catcher);
 	};
 }
 
-export { useHttpClient, Req, Get, Post, Params, Headers, Mock, Merge, Res, InjectRes, Catch };
+export { createRequestConfig, Req, Get, Post, Params, Headers, Mock, Merge, Res, InjectRes, Catch, ReqConfig };

@@ -2,7 +2,8 @@ import {
 	ParamMetadataManager,
 	HeaderMetadataManager,
 	MockMetadataManager,
-	HttpClientMetadataManager,
+	GlobalConfigMetadataManager,
+	ConfigMetadataManager, 
 } from './metadata';
 import {
 	RequestDecoratorConfig,
@@ -16,14 +17,16 @@ import {
 	HttpClientPost,
 	HttpClientPostWithConfig,
 	HttpClientPostWithUrlAndConfig,
+	GlobalRequestConfig,
 } from './types';
 import { arrayFrom, assertIsDefined, assertIsSpecifiedType, isNotEmptyObject, runAll } from './utils';
 import { GlobalTarget } from './constants';
 import { bridge } from './bridge';
 import validate from './validate';
 import transform from './transform';
+import { createStaleWhileRevalidateCache } from 'stale-while-revalidate-cache'
 
-const httpClientMetadataManager = new HttpClientMetadataManager({}, GlobalTarget);
+const globalConfigMetadataManager = new GlobalConfigMetadataManager({}, GlobalTarget);
 
 function createRequest(
 	sendRequest: () => Promise<any>,
@@ -42,6 +45,10 @@ function initRequest(reqDecoratorConfig: RequestDecoratorConfig, reqHostConfig: 
 	const { target, propertyKey, parameters } = reqHostConfig;
 
 	const paramMetadata = new ParamMetadataManager({}, target, propertyKey).get();
+
+	const configMetadata = new ConfigMetadataManager({}, target, propertyKey).get()
+
+	const { httpClient, signature } = configMetadata as GlobalRequestConfig;
 
 	if (typeof reqDecoratorConfig !== 'function' && !(reqDecoratorConfig.request as any).send) {
 		assertIsSpecifiedType<GetDecoratorConfig | PostDecoratorConfig>(reqDecoratorConfig);
@@ -65,11 +72,11 @@ function initRequest(reqDecoratorConfig: RequestDecoratorConfig, reqHostConfig: 
 
 		const headerMetadata = new HeaderMetadataManager({}, target, propertyKey).get();
 		const mockMetadata = new MockMetadataManager({}, target).get();
-		const httpClientMetadata = httpClientMetadataManager.get();
 
-		isNotEmptyObject(httpClientMetadata, 'No Http Client! Maybe forgot to call useHttpClient before using this');
-
-		const { httpClient, signature } = httpClientMetadata;
+		isNotEmptyObject(
+			configMetadata,
+			'No Config! Maybe forgot to call createRequestConfig or use ReqConfig before request'
+		);
 
 		const reqParams = params && bridge(params, paramMetadata, parameters);
 
@@ -82,7 +89,8 @@ function initRequest(reqDecoratorConfig: RequestDecoratorConfig, reqHostConfig: 
 
 		const resMockData = (mockMetadata as any)[propertyKey];
 
-		if (resMockData) r = () => Promise.resolve(resMockData.find(({ url: u }: { url: string }) => u === url).mockData);
+		if (resMockData)
+			r = () => Promise.resolve(resMockData.find(({ url: u }: { url: string }) => u === url).mockData);
 		else {
 			if (method === 'GET') {
 				switch (signature) {

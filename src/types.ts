@@ -1,4 +1,5 @@
 import { AnySchema } from 'joi';
+import { createStaleWhileRevalidateCache } from 'stale-while-revalidate-cache'; 
 
 type Validator = ((response: any, parameters?: any[]) => any) | AnySchema;
 
@@ -92,9 +93,10 @@ type RequestHostConfig = {
 	parameters: any[];
 };
 
-interface HttpClientMetadata {
-	httpClient: HttpClient;
-	signature: string;
+interface GlobalRequestConfig {
+	httpClient: HttpClient,
+	signature?: 'position' | 'name' | 'mix',
+	swr?: Parameters<typeof createStaleWhileRevalidateCache>[0]
 }
 
 interface ParamMetadata {
@@ -173,7 +175,7 @@ export type {
 	AnonymousDecoratorConfig,
 	RequestDecoratorConfig,
 	RequestHostConfig,
-	HttpClientMetadata,
+	GlobalRequestConfig,
 	ParamMetadata,
 	HeaderMetadata,
 	RequestMetadata,

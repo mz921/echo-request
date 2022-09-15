@@ -1,4 +1,6 @@
-const HttpClientSymbol = Symbol('HTTP Client');
+const GlobalConfigSymbol = Symbol('Global Config');
+
+const ConfigSymbol = Symbol('Config')
 
 const ParamSymbol = Symbol('Param');
 
@@ -15,7 +17,8 @@ const MergeSymbol = Symbol('Merge');
 const InfoSymbol = Symbol('Info');
 
 export {
-    HttpClientSymbol,
+    GlobalConfigSymbol,
+    ConfigSymbol,
     ParamSymbol,
     HeaderSymbol,
     ResponseSymbol,

@@ -1,4 +1,4 @@
-import { Req, Get, Post, useHttpClient, Params, Merge, Headers, Res, InjectRes, Catch, Mock } from '../src/index';
+import { Req, Get, Post, createRequestConfig, Params, Merge, Headers, Res, InjectRes, Catch, Mock } from '../src/index';
 import HttpClient from './httpClient';
 
 process.env.NODE_ENV = 'development';
@@ -192,7 +192,9 @@ class TestService {
 }
 
 beforeAll(() => {
-	useHttpClient(HttpClient);
+	createRequestConfig({
+		httpClient: HttpClient,
+	})
 });
 
 describe('GET Request With Req Decorator', () => {
