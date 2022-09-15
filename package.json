@@ -3,7 +3,7 @@
 	"version": "0.1.3",
 	"description": "A declarative http request modeling and management library using decorator.",
 	"main": "dist/index.js",
-	"author": "mz921 <15694528183@163.com>",
+	"author": "mz921 <wylc137@gmail.com>",
 	"license": "MIT",
 	"scripts": {
 		"kill-port": "lsof -i tcp:3000 | grep LISTEN | awk '{print $2}' | xargs kill -9",
